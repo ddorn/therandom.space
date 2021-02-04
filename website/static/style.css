@@ -590,8 +590,35 @@ video {
   line-height: 2rem;
 }
 
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.list-inside {
+  list-style-position: inside;
+}
+
+.list-disc {
+  list-style-type: disc;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .p-4 {
   padding: 1rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.pt-1 {
+  padding-top: 0.25rem;
 }
 
 .static {
@@ -620,8 +647,17 @@ video {
   color: rgba(243, 244, 246, var(--tw-text-opacity));
 }
 
+.text-orange {
+  --tw-text-opacity: 1;
+  color: rgba(255, 165, 0, var(--tw-text-opacity));
+}
+
 .break-all {
   word-break: break-all;
+}
+
+.w-3\/4 {
+  width: 75%;
 }
 
 @keyframes spin {
@@ -703,12 +739,43 @@ video {
   --orange: #ffa500;
 }
 
-.brouse__card {
+a {
+  text-decoration: none;
+  color: var(--orange);
+}
+
+.title--about {
+  font-size: 2rem;
+  color: var(--orange);
+  font-weight: bold;
+}
+
+.section__title--about {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  font-weight: bold;
+}
+
+.p--about {
+  margin-top: 1rem;
+  width: 50%;
+  text-align: justify;
+  line-height: 1.25rem;
+}
+
+.icon {
+  display: inline;
+  height: 1em;
+  padding: 0 0.25em;
+}
+
+.container--narrow {
+  width: 75%;
   display: flex;
   flex-direction: column;
-  border-radius: 0.25rem;
-  background: var(--blue-200);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.12);
+  margin: 0 auto;
+  padding-bottom: 2rem;
+  min-height: 100vh;
 }
 
 @media (min-width: 640px) {
@@ -718,6 +785,10 @@ video {
   .md\:text-6xl {
     font-size: 3.75rem;
     line-height: 1;
+  }
+
+  .md\:ml-1 {
+    margin-left: 0.25rem;
   }
 }
 

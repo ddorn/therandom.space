@@ -46,11 +46,40 @@
     --blue-100: #1a202c;
     --orange: #ffa500;
 }
+a {
+    text-decoration: none;
+    color: var(--orange);
+}
 
-.brouse__card {
+.title--about {
+    font-size: 2rem;
+    color: var(--orange);
+    font-weight: bold;
+}
+
+.section__title--about {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    font-weight: bold;
+}
+
+.p--about {
+    margin-top: 1rem;
+    width: 50%;
+    text-align: justify;
+    line-height: 1.25rem;
+}
+
+.icon {
+    display: inline;
+    height: 1em;
+    padding: 0 0.25em;
+}
+.container--narrow {
+    width: 75%;
     display: flex;
     flex-direction: column;
-    border-radius: 0.25rem;
-    background: var(--blue-200);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.12);
+    margin: 0 auto;
+    padding-bottom: 2rem;
+    min-height: 100vh;
 }

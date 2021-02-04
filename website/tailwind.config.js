@@ -1,6 +1,6 @@
 module.exports = {
     purge: {
-        enabled: true,
+        // enabled: false,
         content: [
             'templates/**/*.html',
             'templates/*.html'
@@ -11,6 +11,9 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: [ 'Gilroy' ]
+            },
+            colors: {
+                orange: '#ffa500'
             }
         },
     },
