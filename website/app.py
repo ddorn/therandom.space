@@ -69,9 +69,9 @@ def french_word ():
 def alsace():
     return word_page("data/alsa.proc2", "Alsace")
 
-@app.route("/name")
-def name():
-    return word_page("data/mec.proc2", "Name")
+@app.route("/film")
+def film():
+    return word_page("data/films.proc5", "Film")
 
 @app.route("/about")
 def about():
