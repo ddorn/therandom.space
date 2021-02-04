@@ -1,0 +1,56 @@
+/* Gilroy Medium */
+@font-face {
+    font-family: "Gilroy";
+    src: url("/static/fonts/gilroy/Gilroy-Medium.eot");
+    src: local("Gilroy Medium"), local("Gilroy-Medium"), url("/static/fonts/gilroy/Gilroy-Medium.eot?#iefix") format("embedded-opentype"), url("/static/fonts/gilroy/Gilroy-Medium.woff2") format("woff2"), url("/static/fonts/gilroy/Gilroy-Medium.woff") format("woff"), url("/static/fonts/gilroy/Gilroy-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+/* END Gilroy Medium */
+
+
+/* Gilroy Bold */
+@font-face {
+    font-family: "Gilroy";
+        src: url("/static/fonts/gilroy/Gilroy-Bold.eot");
+        src: local("Gilroy Bold"), local("Gilroy-Bold"), url("/static/fonts/gilroy/Gilroy-Bold.eot?#iefix") format("embedded-opentype"), url("/static/fonts/gilroy/Gilroy-Bold.woff2") format("woff2"), url("/static/fonts/gilroy/Gilroy-Bold.woff") format("woff"), url("/static/fonts/gilroy/Gilroy-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Gilroy FAT*/
+@font-face {
+    font-family: "Gilroy";
+    src: url("/static/fonts/gilroy/Gilroy-Black.eot");
+    src: local("Gilroy Black"), local("Gilroy-Black"), url("/static/fonts/gilroy/Gilroy-Black.eot?#iefix") format("embedded-opentype"), url("/static/fonts/gilroy/Gilroy-Black.woff2") format("woff2"), url("/static/fonts/gilroy/Gilroy-Black.woff") format("woff"), url("/static/fonts/gilroy/Gilroy-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+
+/* END Gilroy Bold *
+
+/*LA CEST A MOI*/
+@tailwind base;
+@tailwind utilities;
+/* Ici pour ajouter des classes */
+@tailwind components;
+
+:root {
+    --blue-900: #f7fafc;
+    --blue-800: #e2f2f7;
+    --blue-700: #e2e8f0;
+    --blue-500: #a0aec0;
+    --blue-400: #7488a5;
+    --blue-300: #516482;
+    --blue-200: #354157;
+    --blue-100: #1a202c;
+    --orange: #ffa500;
+}
+
+.brouse__card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.25rem;
+    background: var(--blue-200);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.12);
+}
