@@ -4,10 +4,23 @@
 
 {% block body %}
 
+    <div class="h-screen w-3/4 mx-auto flex flex-col justify-between">
 
-    <div class="w-3/4 mx-auto py-8">
-        {% block content %}
+        <nav class="py-8 text-lg lg:flex justify-between font-bold ">
+            <a href="{{ url_for("home") }}" class="text-white">The Random Space</a>
+            <ul class="flex flex-wrap">
+                <li><a class="hover:underline mr-4 md:mr-6" href="{{ url_for("home") }}">Alsace</a></li>
+                <li><a class="hover:underline mr-4 md:mr-6" href="{{ url_for("proverb") }}">Proverbs</a></li>
+                <li><a class="hover:underline mr-4 md:mr-6" href="{{ url_for("french_word") }}">French Words</a></li>
+                <li><a class="hover:underline mr-4 md:mr-6" href="{{ url_for("name") }}">Names</a></li>
+                <li><a class="hover:underline " href="{{ url_for("about") }}">About</a></li>
+            </ul>
+        </nav>
 
-        {% endblock %}
+        <div class="flex-grow pb-4">
+            {% block content %}
+
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}
