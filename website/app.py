@@ -3,12 +3,11 @@
 import json
 from logging.config import dictConfig
 
-from flask import Flask, redirect, render_template, request, Response, url_for
-from markupsafe import Markup
+from flask import Flask, redirect, render_template, request, url_for
 
 try:
     from lampadophore import gen, load_preproc
-    from website.helper import *
+    from helper import *
 except ImportError:
     from .lampadophore import gen, load_preproc
     from .helper import *
