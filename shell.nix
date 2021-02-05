@@ -21,4 +21,8 @@ mkShell {
     my-pkgs.nodejs
     my-pkgs.nodePackages.npm
   ];
+
+  shellHook = ''
+    export PATH="$PATH:$HOME/prog/therandom.space/node_modules/.bin"
+  '';
 }

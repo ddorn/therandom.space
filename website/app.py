@@ -1,15 +1,18 @@
 """
 """
-
-import random as _random
+import json
 from logging.config import dictConfig
 
-from flask import Flask, render_template, request, send_from_directory, Response
+from flask import Flask, render_template, request, Response
 
 try:
     from lampadophore import gen, load_preproc
+    from website.helper import *
 except ImportError:
     from .lampadophore import gen, load_preproc
+    from .helper import *
+
+
 
 dictConfig(
     {
@@ -57,7 +60,7 @@ def home():
 
 @app.route("/proverb")
 def proverb():
-    return word_page("data/citations.proc2", "Proverbe")
+    return word_page("data/citations.proc2", "Proverb")
 
 
 @app.route("/french-word")
@@ -77,6 +80,21 @@ def film():
 def about():
     return render_template("about.html", title="About")
 
+
+@app.route("/<kind>/like", methods=["POST"])
+def like(kind):
+    if kind not in ("alsace", "proverb", "film"):
+        return "error"
+
+    d = json.loads(request.get_data())
+    what = d["what"]
+    # what = request.form["what"]
+    likes = load_likes()
+    likes[kind, what] += 1
+    save_likes(likes)
+
+    like = likes[kind, what]
+    return str(like)
 
 # @app.errorhandler(404)
 # def page_not_found(e):

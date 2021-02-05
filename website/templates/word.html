@@ -1,8 +1,35 @@
 {% extends "layouts/regular.html" %}
-{% from "macros/macros.html" import fractal, navbar %}
+{% from "macros/macros.html" import icon %}
 
 {% block content %}
-    <div class="flex items-center justify-center h-full p-4 lg:p-0">
-        <h1 class="text-3xl md:text-6xl font-bold text-center break-word"> {{ bled }} </h1>
+    <div class="flex flex-col justify-between items-center justify-center h-full p-4 lg:p-0">
+        <div></div>
+        <h1 class="text-3xl md:text-6xl font-bold text-center break-word md:leading-snug"> {{ bled }} </h1>
+        <button id="like-btn" class="px-4 py-2 text-4xl bg-gray-700 rounded-full hover:bg-gray-600 focus:outline-none">
+            {{ icon("heart", "inline h-9 pb-1 pr-2") }} <span id="likes">0</span>
+        </button>
     </div>
+    <script>
+        const button = document.getElementById('like-btn');
+        const likes = document.getElementById('likes');
+
+        button.addEventListener('click', async _ => {
+            try {
+                const response = await fetch('{{ url_for("like", kind=title.lower()) }}', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        what: '{{ bled }}'
+                    })});
+                console.log('Completed!', response);
+                if (response.status === 200) {
+                    button.style.color = "#ffa500";
+                    response.text().then(
+                        text => likes.innerText = text
+                    );
+                }
+            } catch(err) {
+                console.error(`Error: ${err}`);
+            }
+        });
+    </script>
 {% endblock %}
