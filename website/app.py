@@ -4,6 +4,7 @@ import json
 from logging.config import dictConfig
 
 from flask import Flask, redirect, render_template, request, url_for
+from markupsafe import Markup
 
 try:
     from lampadophore import gen, load_preproc
@@ -88,6 +89,11 @@ def about():
     return render_template("about.html", title="About")
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
 @app.route("/<kind>/like", methods=["POST"])
 def like(kind):
     if kind not in ("alsace", "proverb", "film"):
@@ -95,7 +101,8 @@ def like(kind):
 
     d = json.loads(request.get_data())
     print(d)
-    what = d["what"]
+    what = Markup(d["what"]).unescape()
+
     # what = request.form["what"]
     likes = load_likes()
     likes[kind, what] += 1

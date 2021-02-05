@@ -700,6 +700,10 @@ video {
   margin-right: auto;
 }
 
+.ml-1 {
+  margin-left: 0.25rem;
+}
+
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -889,16 +893,14 @@ a {
   padding: 0 0.25em;
 }
 
-.container--narrow {
-  width: 75%;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  padding-bottom: 2rem;
-  min-height: 100vh;
+.text-huge {
+  font-size: 10rem;
 }
 
 @media (min-width: 640px) {
+  .sm\:mt-1 {
+    margin-top: 0.25rem;
+  }
 }
 
 @media (min-width: 768px) {
