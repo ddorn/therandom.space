@@ -16,10 +16,9 @@
         button.addEventListener('click', async _ => {
             try {
                 const response = await fetch('{{ url_for("like", kind=title.lower()) }}', {
-                    method: 'post',
-                    body: JSON.stringify({
-                        what: '{{ bled }}'
-                    })});
+                        method: 'post',
+                        body: '{"what": "{{ bled }}"}'
+                    });
                 console.log('Completed!', response);
                 if (response.status === 200) {
                     button.style.color = "#ffa500";

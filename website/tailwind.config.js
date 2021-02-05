@@ -26,11 +26,12 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: [ 'Gilroy' ]
-            }
+            },
         },
     },
     variants: {
-        extend: {},
-    },
-    plugins: [],
+        extend: {
+            backgroundColor: ['odd'],
+        },
+    }
 }

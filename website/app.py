@@ -3,7 +3,8 @@
 import json
 from logging.config import dictConfig
 
-from flask import Flask, render_template, request, Response
+from flask import Flask, redirect, render_template, request, Response, url_for
+from markupsafe import Markup
 
 try:
     from lampadophore import gen, load_preproc
@@ -51,11 +52,7 @@ def word_page(proc_path, title, min_len=1):
 
 @app.route("/")
 def home():
-    occ = load_preproc(open("data/alsa.proc2"))
-    w = ""
-    while len(w) < 5:
-        w = gen(occ)
-    return render_template("word.html", bled=w, title="Alsace")
+    return redirect(url_for("proverb"))
 
 
 @app.route("/proverb")
@@ -70,11 +67,22 @@ def french_word ():
 
 @app.route("/alsace")
 def alsace():
-    return word_page("data/alsa.proc2", "Alsace")
+    return word_page("data/alsa.proc2", "Alsace", 5)
 
 @app.route("/film")
 def film():
     return word_page("data/films.proc5", "Film")
+
+@app.route("/bestof")
+def bestof():
+    likes = load_likes()
+    flat = [(l, p) for (k, p), l in likes.items() if k == "proverb"]
+    bests = [
+        (proverb, like)
+        for like, proverb in sorted(flat, reverse=True)
+    ]
+
+    return render_template("bestof.html", title="Best of", bests=bests)
 
 @app.route("/about")
 def about():
@@ -87,6 +95,7 @@ def like(kind):
         return "error"
 
     d = json.loads(request.get_data())
+    print(d)
     what = d["what"]
     # what = request.form["what"]
     likes = load_likes()

@@ -1,0 +1,61 @@
+{% extends "layouts/regular.html" %}
+{% from "macros/macros.html" import icon %}
+
+{% block content %}
+    <div>
+        <div class="flex justify-between font-bold text-lg">
+            <div>Proverbe</div>
+            <div>Likes</div>
+        </div>
+
+        <div class="space-y-8 mt-4 text-4xl">
+
+            {% for best in bests %}
+                <div class="line-tag flex flex-col
+                    md:flex-row md:justify-between
+                    font-medium leading-snug
+                    bg-gray-800 rounded-lg border border-gray-500
+                    px-6 py-8 ">
+                    <span class="pb-4 md:pb-0 md:pr-4">{{ best[0] }}</span>
+                    <button class="flex items-center self-end md:self-center w-min bg-gray-700 rounded-full px-6 py-2 border hover:bg-gray-600 focus:outline-none focus:border-orange max-h-16">
+                        <span>{{ best[1] }}</span> {{ icon("heart", "inline h-8 ml-2 ") }}
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        const all = document.querySelectorAll(".line-tag")
+        function add_callback(i) {
+            console.log(all[i].children)
+            const quote = all[i].children[0].textContent;
+            let likes = all[i].children[1]
+            console.log(quote)
+            console.log(likes)
+            likes.addEventListener('click', async _ => {
+                console.log("Called", i, quote  )
+                try {
+                    const response = await fetch('{{ url_for("like", kind="proverb") }}', {
+                        method: 'post',
+                        body: `{ "what": "${quote}"}`
+                    });
+                    console.log('Completed!', response);
+                    if (response.status === 200) {
+                        likes.style.color = "#ffa500";
+                        response.text().then(
+                            text => {likes.children[0].innerText = text; console.log(text)}
+                        );
+                    }
+                } catch(err) {
+                    console.error(`Error: ${err}`);
+                }
+            });
+        }
+
+        for (let i = 0; i < all.length; i++) {
+            console.log(i)
+            add_callback(i)
+        }
+
+    </script>
+{% endblock %}
