@@ -43,10 +43,10 @@ dictConfig(
 app = Flask(__name__)
 
 
-def word_page(proc_path, title, min_len=1):
+def word_page(proc_path, title, min_len=1, max_len=999999):
     occ = load_preproc(open(proc_path))
     w = ""
-    while len(w) < min_len:
+    while len(w.split()) < min_len or len(w.split()) > max_len:
         w = gen(occ)
     return render_template("word.html", bled=w, title=title)
 
@@ -57,7 +57,7 @@ def home():
 
 @app.route("/proverb")
 def proverb():
-    return word_page("data/citations.proc2", "Proverb")
+    return word_page("data/citations.proc2", "Proverb", 4, 16)
 
 
 @app.route("/french-word")
@@ -71,7 +71,7 @@ def alsace():
 
 @app.route("/film")
 def film():
-    return word_page("data/films.proc5", "Film")
+    return word_page("data/films.proc5", "Film", 3)
 
 @app.route("/bestof")
 def bestof():
@@ -110,11 +110,6 @@ def like(kind):
 
     like = likes[kind, what]
     return str(like)
-
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     # note that we set the 404 status explicitly
-#     return render_template("404.html"), 404
 
 
 if __name__ == "__main__":
