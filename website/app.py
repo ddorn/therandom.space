@@ -4,7 +4,7 @@ import json
 from logging.config import dictConfig
 from operator import itemgetter
 
-from flask import Flask, redirect, render_template, request, url_for, abort
+from flask import Flask, redirect, render_template, request, Response, url_for, abort
 from flask_restful import Resource, Api, reqparse
 from markupsafe import Markup
 
@@ -112,7 +112,7 @@ class Generate(Resource):
 
         quote = gen_clean(kind)
         if request.args.get("raw", type=bool):
-            return quote
+            return Response(quote)
 
         like = likes.get(quote, {}).get('likes', 0)
         return {
@@ -145,10 +145,10 @@ class BestOf(Resource):
         filter = args['kind'] or ''
 
         if args['raw']:
-            return '\n'.join(
+            return Response('\n'.join(
                 f"{like} {quote}"
                 for quote, like, _ in flat_bestof(likes)
-            )
+            ))
 
         return {
             i: {
