@@ -710,10 +710,6 @@ video {
   list-style-type: disc;
 }
 
-.m-2 {
-  margin: 0.5rem;
-}
-
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -839,6 +835,10 @@ video {
 
 .select-none {
   user-select: none;
+}
+
+.select-all {
+  user-select: all;
 }
 
 .w-3\/4 {
