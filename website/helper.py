@@ -1,3 +1,4 @@
+import json
 from collections import Counter
 from pathlib import Path
 
@@ -6,6 +7,18 @@ LIKE_FILE = DATA / "like_file"
 
 
 def load_likes():
+    LIKE_FILE.touch()
+    likes = json.loads(LIKE_FILE.read_text())
+    return likes
+
+
+def save_likes(likes):
+    LIKE_FILE.write_text(
+        json.dumps(likes)
+    )
+
+
+def load_likes_old():
     LIKE_FILE.touch()
     likes = Counter()
     for line in LIKE_FILE.open():
@@ -17,7 +30,32 @@ def load_likes():
     return likes
 
 
-def save_likes(likes: Counter):
-    with open(LIKE_FILE, "w") as f:
-        for (kind, what), like in likes.items():
-            print(kind, like, what, file=f)
+def migrate():
+    likes = load_likes_old()
+
+    j = [
+        {
+            "quote": quote,
+            "likes": like,
+            "kind": kind,
+        }
+        for (kind, quote), like in likes.items()
+    ]
+
+    save_likes(j)
+
+
+def migrate2():
+    likes = load_likes()
+    j = {
+        d['quote']: {
+            "likes": d['likes'],
+            "kind": d['kind'],
+        }
+        for d in likes
+    }
+    save_likes(j)
+
+if __name__ == '__main__':
+    migrate()
+    migrate2()

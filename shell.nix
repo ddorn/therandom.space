@@ -12,6 +12,7 @@ let
       pip
       click
       flask
+      flask-restful
     ];
   };
 in

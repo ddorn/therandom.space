@@ -25,37 +25,20 @@
         </div>
     </div>
     <script>
-        const all = document.querySelectorAll(".line-tag")
-        function add_callback(i) {
-            console.log(all[i].children)
-            const quote = all[i].children[0].textContent;
-            let likes = all[i].children[1]
-            console.log(quote)
-            console.log(likes)
-            likes.addEventListener('click', async _ => {
-                console.log("Called", i, quote  )
-                try {
-                    const response = await fetch('{{ url_for("like", kind="proverb") }}', {
-                        method: 'post',
-                        body: `{ "what": "${quote}"}`
-                    });
-                    console.log('Completed!', response);
-                    if (response.status === 200) {
+        document.querySelectorAll(".line-tag").forEach(line => {
+            let [quote, likes] = line.children;
+            likes.addEventListener('click', _ => {
+                fetch('{{ url_for("like", kind="proverb") }}', {
+                    method: 'post',
+                    body: JSON.stringify({ 'quote': quote.innerText }),
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(resp => resp.json()
+                    .then(data => {
                         likes.style.color = "#ffa500";
-                        response.text().then(
-                            text => {likes.children[0].innerText = text; console.log(text)}
-                        );
-                    }
-                } catch(err) {
-                    console.error(`Error: ${err}`);
-                }
-            });
-        }
-
-        for (let i = 0; i < all.length; i++) {
-            console.log(i)
-            add_callback(i)
-        }
-
+                        likes.children[0].innerHTML = data.likes;
+                    })
+                )
+            })
+        })
     </script>
 {% endblock %}

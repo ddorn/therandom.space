@@ -3,7 +3,8 @@
 import json
 from logging.config import dictConfig
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, abort
+from flask_restful import Resource, Api, reqparse
 from markupsafe import Markup
 
 try:
@@ -12,8 +13,6 @@ try:
 except ImportError:
     from .lampadophore import gen, load_preproc
     from .helper import *
-
-
 
 dictConfig(
     {
@@ -41,42 +40,68 @@ dictConfig(
 )
 
 app = Flask(__name__)
+api = Api(app)
+likes = load_likes()
+
+parser = reqparse.RequestParser()
+parser.add_argument("quote")
+
+PROVERB = "proverb"
+ALSACE = "alsace"
+FILM = "film"
+KIND_TO_PROCFILE = {
+    PROVERB: "data/citations.proc2",
+    ALSACE: "data/alsa.proc2",
+    FILM: "data/films.proc5",
+}
+KIND_LEN_BOUNDS = {
+    PROVERB: (4, 16),
+    ALSACE: (5, 9999),
+    FILM: (3, 9999)
+}
 
 
-def word_page(proc_path, title, min_len=1, max_len=999999):
-    occ = load_preproc(open(proc_path))
+def gen_clean(kind):
+    assert kind in KIND_TO_PROCFILE, "Unknown kind"
+
+    mini, maxi = KIND_LEN_BOUNDS[kind]
+    occ = load_preproc(open(KIND_TO_PROCFILE[kind]))
+
     w = ""
-    while len(w.split()) < min_len or len(w.split()) > max_len:
+    length = -1
+    while not (mini <= length <= maxi):
         w = gen(occ)
-    return render_template("word.html", bled=w, title=title)
+        if kind == PROVERB:
+            length = len(w.split())
+        else:
+            length = len(w)
+    return w
+
+
+######################## Word/Sentence pages ########################
+def word_page(kind):
+    word = gen_clean(kind)
+    return render_template("word.html", bled=word, title=kind.title())
+
 
 @app.route("/")
-def home():
-    return redirect(url_for("proverb"))
-
+def home(): return redirect(url_for("proverb"))
 
 @app.route("/proverb")
-def proverb():
-    return word_page("data/citations.proc2", "Proverb", 4, 16)
-
-
-@app.route("/french-word")
-def french_word ():
-    return word_page("data/fr.proc2", "French Word", 4)
-
+def proverb(): return word_page(PROVERB)
 
 @app.route("/alsace")
-def alsace():
-    return word_page("data/alsa.proc2", "Alsace", 5)
+def alsace(): return word_page(ALSACE)
 
 @app.route("/film")
-def film():
-    return word_page("data/films.proc5", "Film", 3)
+def film(): return word_page(FILM)
 
+
+######################## Complex pages ########################
 @app.route("/bestof")
 def bestof():
     likes = load_likes()
-    flat = [(l, p) for (k, p), l in likes.items() if k == "proverb"]
+    flat = [(d['likes'], p) for p, d in likes.items() if d['kind'] == PROVERB]
     bests = [
         (proverb, like)
         for like, proverb in sorted(flat, reverse=True)
@@ -84,8 +109,10 @@ def bestof():
 
     return render_template("bestof.html", title="Best of", bests=bests)
 
+
 @app.route("/about")
 def about():
+    # TODO: add API description
     return render_template("about.html", title="About")
 
 
@@ -94,22 +121,37 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route("/<kind>/like", methods=["POST"])
-def like(kind):
-    if kind not in ("alsace", "proverb", "film"):
-        return "error"
+######################## API ########################
 
-    d = json.loads(request.get_data())
-    print(d)
-    what = Markup(d["what"]).unescape()
+class Generate(Resource):
+    def get(self, kind):
+        if kind not in (ALSACE, PROVERB, FILM):
+            return abort(404)
 
-    # what = request.form["what"]
-    likes = load_likes()
-    likes[kind, what] += 1
-    save_likes(likes)
+        quote = gen_clean(kind)
+        like = likes.get(quote, {}).get('likes', 0)
+        return {
+            'quote': quote,
+            'likes': like
+        }
 
-    like = likes[kind, what]
-    return str(like)
+class Like(Resource):
+    def post(self, kind):
+        if kind not in (ALSACE, PROVERB, FILM):
+            return abort(404)
+
+        args = parser.parse_args(strict=1)
+        print(args)
+        quote = args['quote']
+        d = likes.get(quote, {'kind': kind, 'likes': 0})
+        d['likes'] += 1
+        likes[quote] = d
+        save_likes(likes)
+
+        return dict(quote=quote, **d)
+
+api.add_resource(Generate, '/api/<kind>')
+api.add_resource(Like, '/api/like/<kind>')
 
 
 if __name__ == "__main__":

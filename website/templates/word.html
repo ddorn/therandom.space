@@ -4,31 +4,44 @@
 {% block content %}
     <div class="flex flex-col justify-between items-center justify-center h-full p-4 lg:p-0">
         <div></div>
-        <h1 class="text-3xl md:text-6xl font-bold text-center break-word md:leading-snug"> {{ bled }} </h1>
-        <button id="like-btn" class="px-4 py-2 text-4xl bg-gray-700 rounded-full hover:bg-gray-600 focus:outline-none">
-            {{ icon("heart", "inline h-9 pb-1 pr-2") }} <span id="likes">0</span>
-        </button>
+        <h1 id="quote" class="text-3xl md:text-6xl font-bold text-center break-word md:leading-snug"> {{ bled }} </h1>
+        <div class="text-4xl flex justify-center space-x-4">
+            <button id="reload-btn" class="px-4 py-2 bg-gray-700 rounded-full hover:bg-gray-600 focus:outline-none">
+                {{ icon("reload", "inline h-9 pb-1") }}
+            </button>
+            <button id="like-btn" class="px-4 py-2 bg-gray-700 rounded-full hover:bg-gray-600 focus:outline-none">
+                {{ icon("heart", "inline h-9 pb-1 pr-2") }} <span id="likes">0</span>
+            </button>
+        </div>
     </div>
     <script>
-        const button = document.getElementById('like-btn');
-        const likes = document.getElementById('likes');
+        const like_button = document.getElementById('like-btn');
+        const reload_button = document.getElementById("reload-btn")
+        const quote_elem = document.getElementById("quote")
+        let likes = document.getElementById('likes');
 
-        button.addEventListener('click', async _ => {
-            try {
-                const response = await fetch('{{ url_for("like", kind=title.lower()) }}', {
-                        method: 'post',
-                        body: '{"what": "{{ bled }}"}'
-                    });
-                console.log('Completed!', response);
-                if (response.status === 200) {
-                    button.style.color = "#ffa500";
-                    response.text().then(
-                        text => likes.innerText = text
-                    );
-                }
-            } catch(err) {
-                console.error(`Error: ${err}`);
-            }
-        });
+        like_button.addEventListener('click', _ => {
+            console.log(quote_elem.innerText)
+            fetch('{{ url_for("like", kind=title.lower()) }}', {
+                method: 'post',
+                body: JSON.stringify({ quote: quote_elem.innerText, }),
+                headers: { 'Content-Type': 'application/json' },
+            }).then(resp => resp.json()
+                .then(data => {
+                    likes.innerText = data.likes;
+                    like_button.style.color = "#ffa500";
+                })
+            )
+        })
+
+        reload_button.addEventListener('click',  _ => {
+            fetch('{{ url_for("generate", kind=title.lower()) }}')
+                .then(response => response.json()
+                    .then(data => {
+                        quote_elem.innerText = data.quote;
+                        likes.innerText = data.likes;
+                        like_button.style.color = "white";
+                    }));
+        })
     </script>
 {% endblock %}
