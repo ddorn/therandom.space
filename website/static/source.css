@@ -35,6 +35,13 @@
 /* Ici pour ajouter des classes */
 @tailwind components;
 
+@layer components {
+    .p-about {
+        @apply mt-4 md:w-1/2 text-justify leading-5
+    }
+}
+
+
 :root {
     --blue-900: #f7fafc;
     --blue-800: #e2f2f7;
@@ -46,34 +53,16 @@
     --blue-100: #1a202c;
     --orange: #ffa500;
 }
+
 a {
     text-decoration: none;
     color: var(--orange);
-}
-
-.title--about {
-    font-size: 2rem;
-    color: var(--orange);
-    font-weight: bold;
 }
 
 .section__title--about {
     font-size: 1.5rem;
     margin-top: 1.5rem;
     font-weight: bold;
-}
-
-.p--about {
-    margin-top: 1rem;
-    width: 50%;
-    text-align: justify;
-    line-height: 1.25rem;
-}
-
-.icon {
-    display: inline;
-    height: 1em;
-    padding: 0 0.25em;
 }
 
 .text-huge {
