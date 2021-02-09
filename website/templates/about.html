@@ -16,8 +16,6 @@
         but what I really liked was to <em class="text-it">create</em>
         unexpectedd things, thanks to randomness.
     </p>
-
-
     <p class="p--about">
         At some point, I learned a bit of computer graphics and
         decided that it would be very fun to generate random images,
@@ -31,26 +29,22 @@
         <a href="https://thefractal.space">thefractal.space</a>, my first website,
         to showcase those random fractals.
     </p>
-
     <p class="p--about">
         Comming back to now, I was in recovery from the
         appendicitis, and a bit bored, so I tried to improve
         a simple random word generator I made long ago. The goal
         was threefold:
     </p>
-
     <ul class="list-disc list-inside md:ml-1 pt-1">
         <li>generate alsatian city names</li>
         <li>generate proverbs</li>
         <li>generate random fanfictions</li>
     </ul>
-
     <p class="p--about">
         Sadly, I have not yet succeded the thrird goal,
         because I'm heaving trouble getting data from
         fanfiction websites.
     </p>
-
     <p class="p--about">
         During those few days, I coded a lots of different
         words or entences generators. Not all of them where
@@ -59,52 +53,61 @@
         and familly. That's the reason I wanted to share them ;)
     </p>
 
-<h2 class="section__title--about">How does it work ?</h2>
+
+    <h2 class="section__title--about">How does it work ?</h2>
     <p class="p--about">
-    All my generators work in the same way. The words or
-    sentences are generated in two steps:
+        All my generators work in the same way. The words or
+        sentences are generated in two steps:
     </p>
     <ul class="list-disc list-inside ml-1 p--about sm:mt-1">
-    <li>
-        I gather a large amount of the things I want
-        to generate and produce a probability table
-    </li>
-    <li class="pt-1">
-        I follow the probability table to create some
-        new words / sentences.
-    </li>
+        <li>
+            I gather a large amount of the things I want
+            to generate and produce a probability table
+        </li>
+        <li class="pt-1">
+            I follow the probability table to create some
+            new words / sentences.
+        </li>
     </ul>
-
     <p class="p--about">
-    The probability table works as follow: for a given
-    integer D, and a word/letter W, it gives the probability
-    that W is the next word considering the D previous.
-    The probability comes from the sentences/words is the
-    same that is observed in the sentences/words I've gathered
-    in the first step.
+        The probability table works as follow: for a given
+        integer D, and a word/letter W, it gives the probability
+        that W is the next word considering the D previous.
+        The probability comes from the sentences/words is the
+        same that is observed in the sentences/words I've gathered
+        in the first step.
+    </p>
+    <p class="p--about">
+        For instance, when I generate the proverbs, I set D=2,
+        so the table gives what third word can follow any two
+        words, and with which probability. Therfore, the generation
+        process is simple: I randomly pick two words, and add a third
+        one according to the table, then a fourth word according to
+        the 2nd and 3rd and so on...
+    </p>
+    <p class="p--about">
+        For more details, you can find the source code
+        <a href="https://gitlab.com/ddorn/therandom.space">on Gitlab</a>.
+        The idea is very simple, but the code is a bit more complex because
+        I wanted it to work with any depth and be very generic (the exact same
+        code generates words or sentences!). It means that the probability
+        table is a D dimensionnal array (in practice, a dict), generic over D
+        and most functions are recursive.
     </p>
 
+    <h2 class="section__title--about">API</h2>
     <p class="p--about">
-    For instance, when I generate the proverbs, I set D=2,
-    so the table gives what third word can follow any two
-    words, and with which probability. Therfore, the generation
-    process is simple: I randomly pick two words, and add a third
-    one according to the table, then a fourth word according to
-    the 2nd and 3rd and so on...
+        There is a very simple API to generate proverbs at
+        <code class="inline">www.therandom.space/api/proverb</code>.
+        You can replace <code>proverb</code> with <code>alsace</code> or
+        <code>film</code> to generate different things. <br>
+    </p>
+    <p class="mt-4">
+        <code class="bg-gray-800 p-2 rounded-lg">
+            <span class="select-none text-orange">$ </span>curl www.therandom.space/api/proverb</code>
     </p>
 
-    <p class="p--about">
-    For more details, you can find the source code
-    <a href="https://gitlab.com/ddorn/therandom.space">on Gitlab</a>.
-    The idea is very simple, but the code is a bit more complex because
-    I wanted it to work with any depth and be very generic (the exact same
-    code generates words or sentences!). It means that the probability
-    table is a D dimensionnal array (in practice, a dict), generic over D
-    and most functions are recursive.
-    </p>
-
-
-<h2 class="section__title--about">Credit where it's due</h2>
+    <h2 class="section__title--about">Credit where it's due</h2>
     <p class="p--about">
         First of all, a big <em>Merci</em> to my brother, Félix,
         for his time and advice. Everything I know in front-end

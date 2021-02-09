@@ -141,7 +141,6 @@ class Like(Resource):
             return abort(404)
 
         args = parser.parse_args(strict=1)
-        print(args)
         quote = args['quote']
         d = likes.get(quote, {'kind': kind, 'likes': 0})
         d['likes'] += 1
