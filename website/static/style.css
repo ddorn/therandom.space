@@ -805,6 +805,10 @@ video {
   position: static;
 }
 
+.fixed {
+  position: fixed;
+}
+
 * {
   --tw-shadow: 0 0 #0000;
 }
