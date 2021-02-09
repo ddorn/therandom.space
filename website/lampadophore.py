@@ -26,6 +26,7 @@ def gen(occ):
     word = [EMPTY] * depth
     while word[-1] != EMPTY or len(word) == depth:
         probas = occ[tuple(word[-depth:])]
+        assert probas, "A branch of the occ is cut"
         occ_total = sum(probas.values())
         occ_cum = 0
         cutoff = random.random() * occ_total

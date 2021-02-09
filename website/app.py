@@ -48,22 +48,6 @@ parser = reqparse.RequestParser()
 parser.add_argument("quote")
 
 
-def gen_clean(kind):
-    assert kind in KIND_TO_PROCFILE, "Unknown kind"
-
-    mini, maxi = KIND_LEN_BOUNDS[kind]
-    occ = load_preproc(open(KIND_TO_PROCFILE[kind]))
-
-    w = ""
-    length = -1
-    while not (mini <= length <= maxi):
-        w = gen(occ)
-        if kind == PROVERB:
-            length = len(w.split())
-        else:
-            length = len(w)
-    return w
-
 
 ######################## Word/Sentence pages ########################
 def word_page(kind):

@@ -2,6 +2,8 @@ import json
 from _operator import itemgetter
 from pathlib import Path
 
+from lampadophore import gen, load_preproc
+
 DATA = Path(__file__).parent / "data"
 LIKE_FILE = DATA / "like_file"
 
@@ -30,6 +32,7 @@ def kind_arg_type(s):
         return s
     raise ValueError(f'{s} is not a valid kind. Try {PROVERB}, {ALSACE} or {FILM}.')
 
+
 def load_likes():
     LIKE_FILE.touch()
     likes = json.loads(LIKE_FILE.read_text())
@@ -50,6 +53,23 @@ def flat_bestof(likes):
     ]
     bests.sort(key=itemgetter(1), reverse=True)
     return bests
+
+
+def gen_clean(kind):
+    assert kind in KIND_TO_PROCFILE, "Unknown kind"
+
+    mini, maxi = KIND_LEN_BOUNDS[kind]
+    occ = load_preproc(open(KIND_TO_PROCFILE[kind]))
+
+    w = ""
+    length = -1
+    while not (mini <= length <= maxi):
+        w = gen(occ)
+        if kind == PROVERB:
+            length = len(w.split())
+        else:
+            length = len(w)
+    return w
 
 
 if __name__ == '__main__':
