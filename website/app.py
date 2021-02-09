@@ -2,6 +2,7 @@
 """
 import json
 from logging.config import dictConfig
+from operator import itemgetter
 
 from flask import Flask, redirect, render_template, request, url_for, abort
 from flask_restful import Resource, Api, reqparse
@@ -46,20 +47,6 @@ likes = load_likes()
 parser = reqparse.RequestParser()
 parser.add_argument("quote")
 
-PROVERB = "proverb"
-ALSACE = "alsace"
-FILM = "film"
-KIND_TO_PROCFILE = {
-    PROVERB: "data/citations.proc2",
-    ALSACE: "data/alsa.proc2",
-    FILM: "data/films.proc5",
-}
-KIND_LEN_BOUNDS = {
-    PROVERB: (4, 16),
-    ALSACE: (5, 9999),
-    FILM: (3, 9999)
-}
-
 
 def gen_clean(kind):
     assert kind in KIND_TO_PROCFILE, "Unknown kind"
@@ -101,12 +88,7 @@ def film(): return word_page(FILM)
 @app.route("/bestof")
 def bestof():
     likes = load_likes()
-    flat = [(d['likes'], p) for p, d in likes.items() if d['kind'] == PROVERB]
-    bests = [
-        (proverb, like)
-        for like, proverb in sorted(flat, reverse=True)
-    ]
-
+    bests = [(quote, like) for quote, like, kind in flat_bestof(likes) if kind == PROVERB]
     return render_template("bestof.html", title="Best of", bests=bests)
 
 
@@ -129,6 +111,9 @@ class Generate(Resource):
             return abort(404)
 
         quote = gen_clean(kind)
+        if request.args.get("raw", type=bool):
+            return quote
+
         like = likes.get(quote, {}).get('likes', 0)
         return {
             'quote': quote,
@@ -149,8 +134,34 @@ class Like(Resource):
 
         return dict(quote=quote, **d)
 
+class BestOf(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("raw", type=bool)
+    parser.add_argument("kind", type=kind_arg_type)
+
+    def get(self):
+
+        args = self.parser.parse_args(strict=True)
+        filter = args['kind'] or ''
+
+        if args['raw']:
+            return '\n'.join(
+                f"{like} {quote}"
+                for quote, like, _ in flat_bestof(likes)
+            )
+
+        return {
+            i: {
+                'quote': quote,
+                'likes': like,
+                'kind': kind
+            } for i, (quote, like, kind) in enumerate(flat_bestof(likes))
+            if filter in kind
+        }
+
 api.add_resource(Generate, '/api/<kind>')
 api.add_resource(Like, '/api/like/<kind>')
+api.add_resource(BestOf, '/api/bestof', endpoint='apibestof')
 
 
 if __name__ == "__main__":

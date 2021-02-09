@@ -1,5 +1,5 @@
 {% extends "layouts/regular.html" %}
-{% from "macros/macros.html" import icon %}
+{% from "macros/macros.html" import icon, cmd %}
 {% block content %}
 
     <h1 class="text-orange font-bold text-3xl">About this website</h1>
@@ -95,18 +95,6 @@
         and most functions are recursive.
     </p>
 
-    <h2 class="section__title--about">API</h2>
-    <p class="p--about">
-        There is a very simple API to generate proverbs at
-        <code class="inline">www.therandom.space/api/proverb</code>.
-        You can replace <code>proverb</code> with <code>alsace</code> or
-        <code>film</code> to generate different things. <br>
-    </p>
-    <p class="mt-4">
-        <code class="bg-gray-800 p-2 rounded-lg">
-            <span class="select-none text-orange">$ </span>
-            <span class="select-all">curl www.therandom.space/api/proverb</span></code>
-    </p>
 
     <h2 class="section__title--about">Credit where it's due</h2>
     <p class="p--about">
@@ -130,6 +118,49 @@
             Heroicons</a>
         for the nice icons I use. {{ icon("sun") }}
     </p>
+
+
+    <h2 class="section__title--about">API</h2>
+    <p class="p--about">
+        There is a very simple API to generate proverbs at
+        <code class="inline">www.therandom.space/api/proverb</code>.
+        You can replace <code>proverb</code> with <code>alsace</code> or
+        <code>film</code> to generate different things. <br>
+    </p>
+    {{ cmd("curl https://www.therandom.space/api/proverb", '{
+    "quote": "L\'hypocrisie est un fleuve.",
+    "likes": 1
+}') }}
+
+    <p class="p--about">
+        Note that all endpoint accept a <code>raw</code> argument
+        and return a simple text, instead of json.
+    </p>
+    {{ cmd('curl "http://www.therandom.space/api/film?raw=true"', '"Twelve o\'clocked"') }}
+
+    <p class="p--about">
+        It is also possible to get the full best of, with all
+        kinds (films, proverbs...).
+    </p>
+    {{ cmd("curl https://www.therandom.space/api/bestof", '{
+    "0": {
+        "quote": "Une seule hirondelle ne fait pas cuire le riz.",
+        "likes": 8,
+        "kind": "proverb"
+    },
+    "1": {
+        "quote": "Jimmy door wars: the seven years",
+        "likes": 5,
+        "kind": "film"
+    },
+    ...
+}') }}
+
+    <p class="p--about">
+        It is also possible to filter the bestof to have only one
+        kind:
+    </p>
+    {{ cmd("curl https://www.therandom.space/api/bestof?kind=alsace") }}
 
 
     <h2 class="section__title--about">Contact</h2>

@@ -1,10 +1,34 @@
 import json
-from collections import Counter
+from _operator import itemgetter
 from pathlib import Path
 
 DATA = Path(__file__).parent / "data"
 LIKE_FILE = DATA / "like_file"
 
+PROVERB = "proverb"
+ALSACE = "alsace"
+FILM = "film"
+
+KIND_TO_PROCFILE = {
+    PROVERB: "data/citations.proc2",
+    ALSACE: "data/alsa.proc2",
+    FILM: "data/films.proc5",
+}
+KIND_LEN_BOUNDS = {
+    PROVERB: (4, 16),
+    ALSACE: (5, 9999),
+    FILM: (3, 9999)
+}
+
+
+def valid_kind(kind):
+    return kind in (PROVERB, ALSACE, FILM)
+
+
+def kind_arg_type(s):
+    if valid_kind(s):
+        return s
+    raise ValueError(f'{s} is not a valid kind. Try {PROVERB}, {ALSACE} or {FILM}.')
 
 def load_likes():
     LIKE_FILE.touch()
@@ -18,44 +42,15 @@ def save_likes(likes):
     )
 
 
-def load_likes_old():
-    LIKE_FILE.touch()
-    likes = Counter()
-    for line in LIKE_FILE.open():
-        line = line.strip()
-        if line:
-            kind, _, rest = line.partition(" ")
-            like, _, what = rest.partition(" ")
-            likes[kind, what] += int(like)
-    return likes
-
-
-def migrate():
-    likes = load_likes_old()
-
-    j = [
-        {
-            "quote": quote,
-            "likes": like,
-            "kind": kind,
-        }
-        for (kind, quote), like in likes.items()
+def flat_bestof(likes):
+    """Return all entries sorted in the bestof as tuples (quotes, likes, kind)."""
+    bests = [
+        (quote, d['likes'], d['kind'])
+        for quote, d in likes.items()
     ]
+    bests.sort(key=itemgetter(1), reverse=True)
+    return bests
 
-    save_likes(j)
-
-
-def migrate2():
-    likes = load_likes()
-    j = {
-        d['quote']: {
-            "likes": d['likes'],
-            "kind": d['kind'],
-        }
-        for d in likes
-    }
-    save_likes(j)
 
 if __name__ == '__main__':
-    migrate()
-    migrate2()
+    pass

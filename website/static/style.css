@@ -719,6 +719,10 @@ video {
   margin-left: 0.25rem;
 }
 
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -733,6 +737,10 @@ video {
 
 .max-h-16 {
   max-height: 4rem;
+}
+
+.max-w-max {
+  max-width: max-content;
 }
 
 .focus\:outline-none:focus {
