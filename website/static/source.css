@@ -40,7 +40,7 @@
         @apply mt-4 md:w-1/2 text-justify leading-5
     }
     .btn-gray {
-        @apply px-6 py-2 max-h-16 w-min bg-gray-700 border border-gray-500 hover:bg-gray-600 rounded-full focus:outline-none
+        @apply px-6 py-2 max-h-16 w-min bg-elevation-4 border border-elevation-6 hover:bg-elevation-8 rounded-full focus:outline-none
     }
 }
 
@@ -101,12 +101,21 @@ a {
     position: relative;
     border-radius: 9999px;
 }
+.swag-hover:hover {
+    position: relative;
+    border-radius: 0.75rem;
+}
 .swag:before, .swag:after {
+    border-radius: 9999px;
+}
+.swag-hover:hover:after, .swag-hover:hover:before  {
+    border-radius: 0.75rem;
+}
+.swag:before, .swag:after, .swag-hover:hover:after, .swag-hover:hover:before {
     content: '';
     position: absolute;
     left: -2px;
     top: -2px;
-    border-radius: 9999px;
     background: linear-gradient(45deg,
         #ffa500,
         #ff0000, #ffa500, #a5ff00, #00ffa5,
@@ -120,7 +129,7 @@ a {
     z-index: -1;
     animation: animate 30s linear infinite;
 }
-.swag:after {
+.swag:after, .swag-hover:hover:after {
     filter: blur(10px);
 }
 @keyframes animate {

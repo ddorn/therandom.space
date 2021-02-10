@@ -82,6 +82,12 @@ def about():
 def page_not_found(e):
     return render_template('404.html'), 404
 
+######################## Hidden Pages ^^ ########################
+
+@app.route("/showcase")
+def showcase():
+    return render_template('showcase.html')
+
 
 ######################## API ########################
 

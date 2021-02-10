@@ -49,3 +49,31 @@
         <span>{{ likes }}</span> {{ icon("heart", "inline h-8 ml-2 ") }}
     </button>
 {% endmacro %}
+
+
+{% macro showcase_card(title, legend, image, url) %}
+    <a href="{{ url }}" class="text-white bg-elevation-1 w-64 h-64 m-6 rounded-xl inline-block
+                border border-elevation-1 border-2 shadow-2xl shadow
+                transition
+                transform  hover:scale-105 swag-hover">
+        <div class="h-4/5 relative">
+            <img class="min-h-full min-w-full object-cover
+                        absolute top-0 left-0
+                        z-10 hover:z-0
+                        bg-gray-600 rounded-t-xl"
+                 src="{{ url_for('static', filename='imgs/' + image) }}"
+                 alt="{{ title }}"/>
+            <div class="h-full w-full p-4
+                        absolute top-0 left-0
+                        z-0 hover:z-10
+                        bg-black bg-opacity-0 hover:bg-opacity-80 rounded-t-xl
+                        transition
+                        flex flex-col justify-center">
+                <p>{{ legend | safe }}</p>
+            </div>
+        </div>
+        <div class="h-1/5 pt-3 text-xl bg-gray-800 rounded-b-xl opacity-80">
+            {{ title }}
+        </div>
+    </a>
+{% endmacro %}
