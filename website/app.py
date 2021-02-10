@@ -3,6 +3,7 @@
 import json
 from logging.config import dictConfig
 from operator import itemgetter
+from typing import Dict
 
 from flask import Flask, redirect, render_template, request, Response, url_for, abort
 from flask_restful import Resource, Api, reqparse
@@ -42,10 +43,10 @@ dictConfig(
 
 app = Flask(__name__)
 api = Api(app)
-likes = load_likes()
+likes: Dict[str, Dict] = load_likes()
 
-parser = reqparse.RequestParser()
-parser.add_argument("quote")
+quote_parser = reqparse.RequestParser()
+quote_parser.add_argument("quote")
 
 
 
@@ -106,15 +107,31 @@ class Generate(Resource):
 
 class Like(Resource):
     def post(self, kind):
-        if kind not in (ALSACE, PROVERB, FILM):
+        if not valid_kind(kind):
             return abort(404)
-
-        args = parser.parse_args(strict=1)
+        args = quote_parser.parse_args(strict=1)
         quote = args['quote']
-        d = likes.get(quote, {'kind': kind, 'likes': 0})
+
+        d = likes.setdefault(quote, {'kind': kind, 'likes': 0})
         d['likes'] += 1
-        likes[quote] = d
         save_likes(likes)
+
+        return dict(quote=quote, **d)
+
+    def delete(self, kind):
+        if not valid_kind(kind):
+            return abort(404)
+        args = quote_parser.parse_args(strict=1)
+        quote = args['quote']
+
+        if quote in likes:
+            d = likes[quote]
+            d['likes'] -= 1
+            if d['likes'] == 0:
+                del likes[quote]
+            save_likes(likes)
+        else:
+            d = {'kind': kind, 'likes': 0}
 
         return dict(quote=quote, **d)
 

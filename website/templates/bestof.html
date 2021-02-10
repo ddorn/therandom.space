@@ -1,5 +1,5 @@
 {% extends "layouts/regular.html" %}
-{% from "macros/macros.html" import icon %}
+{% from "macros/macros.html" import icon, like_btn %}
 
 {% block content %}
     <div>
@@ -17,28 +17,16 @@
                     bg-gray-800 rounded-lg border border-gray-500
                     px-6 py-8 ">
                     <span class="pb-4 md:pb-0 md:pr-4">{{ best[0] }}</span>
-                    <button class="flex items-center self-end md:self-center w-min bg-gray-700 rounded-full px-6 py-2 border border-gray-500 hover:bg-gray-600 focus:outline-none focus:border-orange max-h-16">
-                        <span>{{ best[1] }}</span> {{ icon("heart", "inline h-8 ml-2 ") }}
-                    </button>
+                    {{ like_btn(best[1], 'self-end md:self-center') }}
                 </div>
             {% endfor %}
         </div>
     </div>
+    <script src="{{ url_for("static", filename="random.js") }}"></script>
     <script>
         document.querySelectorAll(".line-tag").forEach(line => {
             let [quote, likes] = line.children;
-            likes.addEventListener('click', _ => {
-                fetch('{{ url_for("like", kind="proverb") }}', {
-                    method: 'post',
-                    body: JSON.stringify({ 'quote': quote.innerText }),
-                    headers: { 'Content-Type': 'application/json' }
-                }).then(resp => resp.json()
-                    .then(data => {
-                        likes.style.color = "#ffa500";
-                        likes.children[0].innerHTML = data.likes;
-                    })
-                )
-            })
+            make_like_button(likes, quote, 'proverb')
         })
     </script>
 {% endblock %}

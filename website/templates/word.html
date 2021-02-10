@@ -1,47 +1,36 @@
 {% extends "layouts/regular.html" %}
-{% from "macros/macros.html" import icon %}
+{% from "macros/macros.html" import icon, like_btn %}
 
 {% block content %}
     <div class="flex flex-col justify-between items-center justify-center h-full p-4 lg:p-0">
         <div></div>
         <h1 id="quote" class="text-3xl md:text-6xl font-bold text-center break-word md:leading-snug select-all">{{ bled }}</h1>
         <div class="text-4xl flex justify-center space-x-4">
-            <button id="reload-btn" class="px-4 py-2 bg-gray-700 rounded-full hover:bg-gray-600 focus:outline-none">
+            <button id="reload-btn" class="btn-gray">
                 {{ icon("reload", "inline h-9 pb-1") }}
             </button>
-            <button id="like-btn" class="px-4 py-2 bg-gray-700 rounded-full hover:bg-gray-600 focus:outline-none">
-                {{ icon("heart", "inline h-9 pb-1 pr-2") }} <span id="likes">0</span>
-            </button>
+            {{ like_btn(0, id='like-btn') }}
         </div>
     </div>
+    <script src="{{ url_for("static", filename="random.js") }}"></script>
     <script>
         const like_button = document.getElementById('like-btn');
-        const reload_button = document.getElementById("reload-btn")
         const quote_elem = document.getElementById("quote")
-        let likes = document.getElementById('likes');
+        const reload_button = document.getElementById("reload-btn")
 
-        like_button.addEventListener('click', _ => {
-            console.log(quote_elem.innerText)
-            fetch('{{ url_for("like", kind=title.lower()) }}', {
-                method: 'post',
-                body: JSON.stringify({ quote: quote_elem.innerText, }),
-                headers: { 'Content-Type': 'application/json' },
-            }).then(resp => resp.json()
-                .then(data => {
-                    likes.innerText = data.likes;
-                    like_button.style.color = "#ffa500";
-                })
-            )
-        })
+        make_like_button(document.getElementById('like-btn'),
+            document.getElementById('quote'),
+            '{{ title.lower() }}');
 
         reload_button.addEventListener('click',  _ => {
             fetch('{{ url_for("generate", kind=title.lower()) }}')
                 .then(response => response.json()
                     .then(data => {
                         quote_elem.innerText = data.quote;
-                        likes.innerText = data.likes;
+                        like_button.children[0].innerText = data.likes;
                         like_button.style.color = "white";
-                    }));
+                    })
+                );
         })
     </script>
 {% endblock %}
