@@ -13,7 +13,7 @@ FILM = "film"
 
 KIND_TO_PROCFILE = {
     PROVERB: "data/citations.proc2",
-    ALSACE: "data/alsa.proc2",
+    ALSACE: "data/alsa.proc3",
     FILM: "data/films.proc5",
 }
 KIND_LEN_BOUNDS = {
