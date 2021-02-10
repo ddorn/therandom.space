@@ -908,6 +908,25 @@ a {
   color: var(--orange);
 }
 
+.tooltip {
+  position: absolute;
+  background: rebeccapurple;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+}
+
+.tooltip:after {
+  content: " ";
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid rebeccapurple;
+  position: absolute;
+  left: calc(50% - 10px);
+  bottom: -7px;
+}
+
 .section__title--about {
   font-size: 1.5rem;
   margin-top: 1.5rem;

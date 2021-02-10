@@ -1,9 +1,14 @@
 let liked = JSON.parse(localStorage.getItem('liked'));
 if (!liked) liked = [];
 
+
+function isLiked(quote) {
+    return liked.indexOf(quote) !== -1
+}
+
 function make_like_button(like_button, quote_elem, kind) {
-    // Already liked ? Orange button
-    if (liked.indexOf(quote_elem.innerText) !== -1) {
+    // Directly set the right color
+    if (isLiked(quote_elem.innerText)) {
         like_button.style.color = '#ffa500'
     }
     // Click toggles likes
@@ -27,4 +32,40 @@ function make_like_button(like_button, quote_elem, kind) {
             })
         )
     })
+}
+
+/// Text can be a string or a function returning one
+function make_tooltip(elem, text) {
+    function cancelTip() {
+        document.querySelectorAll('.tooltip').forEach(tip => tip.remove())
+    }
+
+    function showTip() {
+        var tip = document.createElement('div');
+
+        tip.appendChild(document.createTextNode(text instanceof Function ? text() : text));
+        tip.className = 'tooltip';
+        document.body.appendChild(tip);
+
+        // Positioning
+        let elem_rect = elem.getBoundingClientRect();
+        let tip_rect = tip.getBoundingClientRect();
+        let top = elem_rect.top - tip_rect.height - 12 + 'px';
+        tip.style.left = elem_rect.left + elem_rect.width / 2 - tip_rect.width / 2 + 'px'
+        tip.style.top = top;
+    }
+
+    elem.addEventListener('click', cancelTip)
+    elem.addEventListener('mouseover', showTip)
+    elem.addEventListener('mouseout', cancelTip)
+}
+
+function copy(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
 }
