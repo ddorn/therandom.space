@@ -44,7 +44,11 @@
         let kind = '{{ title.lower() }}'
         make_tooltip(reload_button, `New ${kind === 'alsace' ? 'town name' : kind}`)
 
-        clip_button.addEventListener('click', _ => copy(quote_elem.innerText));
         make_tooltip(clip_button, 'Copy to clipboard');
+        clip_button.addEventListener('click', _ => {
+            let tip = create_tip(clip_button, 'Copied !')
+            setTimeout(() => tip.remove(), 1000)
+            copy(quote_elem.innerText);
+        })
     </script>
 {% endblock %}

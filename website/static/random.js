@@ -34,30 +34,22 @@ function make_like_button(like_button, quote_elem, kind) {
     })
 }
 
-/// Text can be a string or a function returning one
+/// Add an automatic tooltip above an element.
+/// Text can be a string or a function returning one.
 function make_tooltip(elem, text) {
+    let tip = null;
     let has_tip = false;
 
     function cancelTip() {
-        document.querySelectorAll('.tooltip').forEach(tip => tip.remove())
+        if (tip) {
+            tip.remove();
+            tip = null;
+        }
     }
 
     function showTip() {
-        if (has_tip) return;
-
-        var tip = document.createElement('div');
-
-        tip.appendChild(document.createTextNode(text instanceof Function ? text() : text));
-        tip.className = 'tooltip';
-        document.body.appendChild(tip);
-
-        // Positioning
-        let elem_rect = elem.getBoundingClientRect();
-        let tip_rect = tip.getBoundingClientRect();
-        let top = elem_rect.top - tip_rect.height - 12 + 'px';
-        tip.style.left = elem_rect.left + elem_rect.width / 2 - tip_rect.width / 2 + 'px'
-        tip.style.top = top;
-
+        if (has_tip || tip) return;
+        tip = create_tip(elem, text)
         has_tip = true;
     }
 
@@ -66,6 +58,27 @@ function make_tooltip(elem, text) {
     elem.addEventListener('mouseleave', cancelTip)
     elem.addEventListener('mouseleave', _ => has_tip = false)
 }
+
+/// Create a tooltip above an element.
+/// Text can be a string or a function returning one.
+function create_tip(elem, text) {
+    let tip = document.createElement('div');
+
+    tip.appendChild(document.createTextNode(text instanceof Function ? text() : text));
+    tip.className = 'tooltip';
+    document.body.appendChild(tip);
+
+    // Positioning
+    let elem_rect = elem.getBoundingClientRect();
+    let tip_rect = tip.getBoundingClientRect();
+    console.log(tip_rect.height, elem_rect.top)
+    let top = elem_rect.top - tip_rect.height - 12 + 'px';
+    tip.style.left = elem_rect.left + elem_rect.width / 2 - tip_rect.width / 2 + 'px'
+    tip.style.top = top;
+
+    return tip;
+}
+
 
 function copy(text) {
     var textArea = document.createElement("textarea");
