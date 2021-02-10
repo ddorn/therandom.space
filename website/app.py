@@ -1,5 +1,6 @@
 """
 """
+import random
 from logging.config import dictConfig
 from typing import Dict
 
@@ -48,7 +49,8 @@ quote_parser.add_argument("quote")
 ######################## Word/Sentence pages ########################
 def word_page(kind):
     word = gen_clean(kind)
-    return render_template("word.html", bled=word, title=kind.title())
+    l = likes.get(word, {}).get('likes', 0)
+    return render_template("word.html", likes=l, bled=word, title=kind.title())
 
 
 @app.route("/")
@@ -86,7 +88,7 @@ def page_not_found(e):
 
 @app.route("/showcase")
 def showcase():
-    return render_template('showcase.html')
+    return render_template('showcase.html', title="Showcase")
 
 
 ######################## API ########################

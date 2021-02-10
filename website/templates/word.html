@@ -9,7 +9,7 @@
             <button id="reload-btn" class="btn-gray">
                 {{ icon("reload", "h-9 pb-1") }}
             </button>
-            {{ like_btn(0, id='like-btn') }}
+            {{ like_btn(likes, id='like-btn') }}
             <button id="clip-btn" class="btn-gray">
                 {{ icon("clipboard", "h-9 pb-1") }}
             </button>
@@ -37,7 +37,11 @@
                     .then(data => {
                         quote_elem.innerText = data.quote;
                         like_button.children[0].innerText = data.likes;
-                        like_button.style.color = "white";
+                        if (isLiked(data.quote)) {
+                            like_button.style.color = "#ffa500";
+                        } else {
+                            like_button.style.color = "white";
+                        }
                     })
                 );
         })

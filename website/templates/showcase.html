@@ -2,6 +2,7 @@
 {% from "macros/macros.html" import icon, showcase_card %}
 
 {% block content %}
+    <h1 class="text-8xl text-center p-6">Projects</h1>
     <div class="mx-auto max-w-screen-lg text-center">
         {{ showcase_card("The Fractal Space",
             "A random fractal generator. <br><br>Enter your name or anything, get a fractal !",
@@ -15,6 +16,17 @@
             "A generator of random proverbs, movie titles or town names.",
             "therandomspace.png",
             "https://therandom.space") }}
-
+        {{ showcase_card("Chaos",
+            "A one-stick shooter made only with particles.<br><br>Made in one weekend in Rust for the 10th Alakajam.",
+            "chaos.png",
+            "https://alakajam.com/10th-alakajam/984/chaos/") }}
+        {{ showcase_card("48hours",
+            "A plateformer with a destructive llama.<br><br>My first full game, made with a friend in 48hours. Note: we suck at level design!",
+            "48hours.png",
+            "https://gitlab.com/lama-corp/48hours") }}
+        {{ showcase_card("Shadows",
+            "A pygame experiment with lightning and shadows.",
+            "shadows.png",
+            "https://gitlab.com/ddorn/shadow") }}
     </div>
 {% endblock %}

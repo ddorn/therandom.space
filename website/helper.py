@@ -1,5 +1,6 @@
 
 import json
+import random
 from operator import itemgetter
 from pathlib import Path
 
@@ -56,6 +57,12 @@ def flat_bestof(likes):
     return bests
 
 
+def length(w, kind):
+    if kind == PROVERB:
+        return len(w.split())
+    return len(w)
+
+
 def gen_clean(kind):
     assert kind in KIND_TO_PROCFILE, "Unknown kind"
 
@@ -63,13 +70,12 @@ def gen_clean(kind):
     occ = NGram.load(open(KIND_TO_PROCFILE[kind]))
 
     w = ""
-    length = -1
-    while not (mini <= length <= maxi):
+    if random.randint(0, 2) == 0:
+        # Sometimes replace with one of the bestof
+        w = random.choice([q for q, d in load_likes().items() if d['kind'] == kind] + [''])
+
+    while not (mini <= length(w, kind) <= maxi):
         w = occ.gen()
-        if kind == PROVERB:
-            length = len(w.split())
-        else:
-            length = len(w)
     return w
 
 
