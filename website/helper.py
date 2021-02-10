@@ -70,7 +70,7 @@ def gen_clean(kind):
     occ = NGram.load(open(KIND_TO_PROCFILE[kind]))
 
     w = ""
-    if random.randint(0, 2) == 0:
+    if random.randint(0, 15) == 0:
         # Sometimes replace with one of the bestof
         w = random.choice([q for q, d in load_likes().items() if d['kind'] == kind] + [''])
 
