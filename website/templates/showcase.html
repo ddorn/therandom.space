@@ -2,31 +2,53 @@
 {% from "macros/macros.html" import icon, showcase_card %}
 
 {% block content %}
-    <h1 class="text-8xl text-center p-6">Projects</h1>
-    <div class="mx-auto max-w-screen-lg text-center">
+    <h1 class="text-8xl text-center pt-4 pb-12">Projects</h1>
+    <div class="mx-auto max-w-screen-xl text-center">
         {{ showcase_card("The Fractal Space",
-            "A random fractal generator. <br><br>Enter your name or anything, get a fractal !",
-            "thefractalspace.png",
-            "https://thefractal.space") }}
+                "A random fractal generator. <br><br>Enter your name or anything, get a fractal !",
+                "thefractalspace.png",
+                "https://thefractal.space",
+                "python javascript flask") }}
         {{ showcase_card("The Casta Way",
-            "A game about going up a golden road and... beer.<br><br>It was made in under 4 days with my little brother for Pyweek30",
-            "thecastaway.png",
-            "https://pyweek.org/e/the-casta-way/") }}
+                "A game about going up a golden road and... beer.<br><br>It was made in under 4 days with my little brother for Pyweek30",
+                "thecastaway.png",
+                "https://pyweek.org/e/the-casta-way/",
+                "python pygame jam") }}
         {{ showcase_card("The Random Space",
-            "A generator of random proverbs, movie titles or town names.",
-            "therandomspace.png",
-            "https://therandom.space") }}
+                "A generator of random proverbs, movie titles or town names.",
+                "therandomspace.png",
+                "https://therandom.space",
+                "javascript python flask")  }}
         {{ showcase_card("Chaos",
-            "A one-stick shooter made only with particles.<br><br>Made in one weekend in Rust for the 10th Alakajam.",
-            "chaos.png",
-            "https://alakajam.com/10th-alakajam/984/chaos/") }}
+                "A one-stick shooter made only with particles.<br><br>Made in one weekend in Rust for the 10th Alakajam.",
+                "chaos.png",
+                "https://alakajam.com/10th-alakajam/984/chaos/",
+                "rust jam")  }}
         {{ showcase_card("48hours",
-            "A plateformer with a destructive llama.<br><br>My first full game, made with a friend in 48hours. Note: we suck at level design!",
-            "48hours.png",
-            "https://gitlab.com/lama-corp/48hours") }}
+                "A plateformer with a destructive llama.<br><br>My first full game, made with a friend in 48hours. Note: we suck at level design!",
+                "48hours.png",
+                "https://gitlab.com/lama-corp/48hours",
+                "python pygame") }}
         {{ showcase_card("Shadows",
-            "A pygame experiment with lightning and shadows.",
-            "shadows.png",
-            "https://gitlab.com/ddorn/shadow") }}
+                "A pygame experiment with lightning and shadows.",
+                "shadows.png",
+                "https://gitlab.com/ddorn/shadow",
+                'python pygame experiment') }}
     </div>
+
+    <script src="{{ url_for('static', filename='random.js') }}"></script>
+    <script>
+        const translations = {
+            python: 'Language: Python',
+            rust: 'Language: Rust',
+            javascript: 'Language: Javascript',
+            flask: 'Web framework: Flask',
+            pygame: 'Graphics with Pygame',
+            jam: 'Made during a game jam',
+            experiment: 'This is an experiment',
+        };
+        document.querySelectorAll('[data-tooltip]').forEach(elem => {
+            make_tooltip(elem, translations[elem.getAttribute('data-tooltip')])
+        })
+    </script>
 {% endblock %}
