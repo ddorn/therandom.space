@@ -1,19 +1,14 @@
 """
 """
-import json
 from logging.config import dictConfig
-from operator import itemgetter
 from typing import Dict
 
-from flask import Flask, redirect, render_template, request, Response, url_for, abort
-from flask_restful import Resource, Api, reqparse
-from markupsafe import Markup
+from flask import abort, Flask, redirect, render_template, request, Response, url_for
+from flask_restful import Api, reqparse, Resource
 
 try:
-    from lampadophore import gen, load_preproc
     from helper import *
 except ImportError:
-    from .lampadophore import gen, load_preproc
     from .helper import *
 
 dictConfig(

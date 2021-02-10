@@ -1,8 +1,9 @@
+
 import json
-from _operator import itemgetter
+from operator import itemgetter
 from pathlib import Path
 
-from lampadophore import gen, load_preproc
+from lampadophore import NGram
 
 DATA = Path(__file__).parent / "data"
 LIKE_FILE = DATA / "like_file"
@@ -59,12 +60,12 @@ def gen_clean(kind):
     assert kind in KIND_TO_PROCFILE, "Unknown kind"
 
     mini, maxi = KIND_LEN_BOUNDS[kind]
-    occ = load_preproc(open(KIND_TO_PROCFILE[kind]))
+    occ = NGram.load(open(KIND_TO_PROCFILE[kind]))
 
     w = ""
     length = -1
     while not (mini <= length <= maxi):
-        w = gen(occ)
+        w = occ.gen()
         if kind == PROVERB:
             length = len(w.split())
         else:
