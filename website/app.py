@@ -1,6 +1,5 @@
 """
 """
-import random
 from logging.config import dictConfig
 from typing import Dict
 
@@ -45,31 +44,32 @@ quote_parser = reqparse.RequestParser()
 quote_parser.add_argument("quote")
 
 
-
-######################## Word/Sentence pages ########################
+# ####################### Word/Sentence pages ####################### #
 def word_page(kind):
     word = gen_clean(kind)
-    l = likes.get(word, {}).get('likes', 0)
-    return render_template("word.html", likes=l, bled=word, title=kind.title())
+    like = likes.get(word, {}).get('likes', 0)
+    return render_template("word.html", likes=like, bled=word, title=kind.title())
 
 
 @app.route("/")
 def home(): return redirect(url_for("proverb"))
 
+
 @app.route("/proverb")
 def proverb(): return word_page(PROVERB)
 
+
 @app.route("/alsace")
 def alsace(): return word_page(ALSACE)
+
 
 @app.route("/film")
 def film(): return word_page(FILM)
 
 
-######################## Complex pages ########################
+# ####################### Complex pages ####################### #
 @app.route("/bestof")
 def bestof():
-    likes = load_likes()
     bests = [(quote, like) for quote, like, kind in flat_bestof(likes) if kind == PROVERB]
     return render_template("bestof.html", title="Best of", bests=bests)
 
@@ -81,17 +81,18 @@ def about():
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(_):
     return render_template('404.html'), 404
 
-######################## Hidden Pages ^^ ########################
+
+# ####################### Hidden Pages ^^ ####################### #
 
 @app.route("/showcase")
 def showcase():
     return render_template('showcase.html', title="Showcase")
 
 
-######################## API ########################
+# ####################### API ####################### #
 
 class Generate(Resource):
     def get(self, kind):
@@ -107,6 +108,7 @@ class Generate(Resource):
             'quote': quote,
             'likes': like
         }
+
 
 class Like(Resource):
     def post(self, kind):
@@ -138,15 +140,15 @@ class Like(Resource):
 
         return dict(quote=quote, **d)
 
+
 class BestOf(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument("raw", type=bool)
     parser.add_argument("kind", type=kind_arg_type)
 
     def get(self):
-
         args = self.parser.parse_args(strict=True)
-        filter = args['kind'] or ''
+        filter_ = args['kind'] or ''
 
         if args['raw']:
             return Response('\n'.join(
@@ -160,13 +162,13 @@ class BestOf(Resource):
                 'likes': like,
                 'kind': kind
             } for i, (quote, like, kind) in enumerate(flat_bestof(likes))
-            if filter in kind
+            if filter_ in kind
         }
+
 
 api.add_resource(Generate, '/api/<kind>')
 api.add_resource(Like, '/api/like/<kind>')
 api.add_resource(BestOf, '/api/bestof', endpoint='apibestof')
-
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True)

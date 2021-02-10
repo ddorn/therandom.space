@@ -1,4 +1,3 @@
-
 import json
 import random
 from operator import itemgetter
@@ -24,6 +23,11 @@ KIND_LEN_BOUNDS = {
     FILM: (3, 9999)
 }
 
+CONFIG_FILE = Path(__file__).parent / 'config.json'
+
+
+def get_config(key):
+    return json.loads(CONFIG_FILE.read_text())[key]
 
 def valid_kind(kind):
     return kind in (PROVERB, ALSACE, FILM)
@@ -70,7 +74,7 @@ def gen_clean(kind):
     occ = NGram.load(open(KIND_TO_PROCFILE[kind]))
 
     w = ""
-    if random.randint(0, 15) == 0:
+    if random.randint(0, get_config("SERVE_BESTOF_DICE")) == 0:
         # Sometimes replace with one of the bestof
         w = random.choice([q for q, d in load_likes().items() if d['kind'] == kind] + [''])
 
