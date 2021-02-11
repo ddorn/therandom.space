@@ -2,7 +2,7 @@
 {% from "macros/macros.html" import icon, showcase_card %}
 
 {% block content %}
-    <h1 class="text-8xl text-center pt-4 pb-12">Projects</h1>
+    <h1 class="text-8xl text-center pt-4 pb-12 z-10">Projects</h1>
     <div class="mx-auto max-w-screen-xl text-center ">
         {{ showcase_card("The Fractal Space",
                 "A random fractal generator. <br><br>Enter your name or anything, get a fractal !",
@@ -37,7 +37,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='random.js') }}"></script>
-    <script src="{{ url_for('static', filename='minHeap.js') }}"></script>
     <script>
         const translations = {
             python: 'Language: Python',
@@ -53,156 +52,9 @@
         })
     </script>
 
-    <script>
-        'use strict';
+{% endblock %}
 
-        const SNAKE_COLOR = '#ffa50080';
-        const APPLE_COLOR = '#a5ff0080';
-        let snake = [[4, 3]];
-        let apple = randomApple();
-        console.log(apple, snake.indexOf(apple), snake)
-        let cases = {};
-        createCase(true, snake[0]);
-        createCase(false, apple);
-
-        function toIdx(pos) { return pos[0] + ' ' + pos[1]; }
-        function fromIdx(idx) { return idx.split(' ').map(Number) }
-        function caseSize() { return 80; }
-        function head(snake) { return snake[snake.length - 1]; }
-        function listContains(list, pos) { return list.some(p => equal(p, pos)); }
-        function equal(p1, p2) { return p1[0] === p2[0] && p1[1] === p2[1]}
-
-        function reset() {
-            for (let c in cases) { cases[c].remove() }
-            cases = {}
-            snake = [randomApple()];  // Who said it had to be the position of an apple ?
-            apple = randomApple();
-            createCase(true, snake[0])
-            createCase(false, apple)
-        }
-        function randomApple() {
-            let [x, y] = snake[0];
-            // Somewhere not on the snake
-            while (listContains(snake, [x, y])) {
-                x = Math.floor(Math.random() * window.innerWidth / caseSize());
-                y = Math.floor(Math.random() * window.innerHeight / caseSize());
-            }
-            return [x, y];
-        }
-
-        function createCase(isSnake, pos, attatch_to) {
-            const padding = 5;
-
-            // Compute the position/size offset to join the snake parts
-            let dx, dy, dw, dh;
-            if (attatch_to === undefined) {
-                attatch_to = pos;
-            }
-            let x = pos[0] - attatch_to[0];
-            let y = pos[1] - attatch_to[1]
-
-            dw = (x !== 0) ? 2*padding : 0;
-            dh = (y !== 0) ? 2*padding : 0;
-            dx = (x > 0) ? -2*padding : 0;
-            dy = (y > 0) ? -2*padding : 0;
-
-            let c = document.createElement('div')
-            let s = caseSize();
-            c.style.position = 'absolute';
-            c.style.left = pos[0] * s + padding + dx + 'px';
-            c.style.top = pos[1] * s + padding + dy + 'px';
-            c.style.backgroundColor = isSnake ? SNAKE_COLOR : APPLE_COLOR;
-            c.style.zIndex = -1;
-            c.style.height = s - 2*padding + dh + 'px';
-            c.style.width = s - 2*padding + dw + 'px';
-            document.body.append(c);
-            cases[toIdx(pos)] = c;
-        }
-        function deleteCase(pos) {
-            let c = cases[toIdx(pos)]
-            c.remove();
-            delete cases[toIdx(pos)]
-        }
-
-        function moveSnake(dx, dy) {
-            if (snake.length > 30) { reset(); }
-            // TODO: collide borders
-            let [hx, hy] = head(snake);
-            let next = [hx + dx, hy + dy];
-            if (equal(next, apple)) {
-                deleteCase(apple)
-                createCase(true, next, [hx, hy])
-                snake.push(next);
-                apple = randomApple();
-                createCase(false, apple);
-            } else if (toIdx(next) in cases) {
-                reset()
-            } else {
-                createCase(true, next, [hx, hy]);
-                snake.push(next)
-                deleteCase(snake.shift())
-            }
-        }
-
-        function shortestPath(a, b, obstacles) {
-            /// A* path finding
-            let dist = (a, b) => Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
-            let heap = new MinHeap([{ pos: a, dist: dist(a, b) }],
-                (p, q) => p.dist === q.dist ? 0 : p.dist < q.dist ? -1 : 1);
-
-            const directions = [
-                [1, 0],
-                [0, 1],
-                [-1, 0],
-                [0, -1]
-            ];
-            let visited = {}
-            loop: while (heap.size() !== 0) {
-                let node = heap.pop();
-                let pos = node.pos;
-                for (const [dx, dy] of directions) {
-                    let next = [pos[0] + dx, pos[1] + dy];
-                    if (equal(next, b)) {
-                        visited[toIdx(b)] = pos
-                        break loop;
-                    } else if (toIdx(next) in visited || listContains(obstacles, next)) {
-                    } else {
-                        visited[toIdx(next)] = pos;
-                        heap.push({ pos: next, dist: dist(next, b) });
-                    }
-                }
-            }
-
-            // Backtrack the path
-            let path = []
-            let pos = b;
-            while (!equal(pos, a)) {
-                path.push(pos);
-                pos = visited[toIdx(pos)]
-            }
-            path.push(a)
-
-            return path.reverse();
-        }
-
-        function findDirection() {
-            let h = head(snake);
-            let path = shortestPath(h, apple, snake);
-            if (path === undefined) {
-                return [1, 0]
-            }
-            return [path[1][0] - h[0], path[1][1] - h[1]]
-        }
-
-        function animationFrame(_now) {
-            let [dx, dy] = findDirection();
-            moveSnake(dx, dy);
-
-            setTimeout(() => requestAnimationFrame(animationFrame), 100);
-        }
-        requestAnimationFrame(animationFrame)
-
-
-
-    </script>
+{% block background %}
+    <canvas id="bg-canvas" class="absolute w-screen h-screen overflow-hidden"></canvas>
+    <script src="{{ url_for('static', filename='wind.js') }}"></script>
 {% endblock %}

@@ -838,6 +838,10 @@ video {
   opacity: 0.8;
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -985,6 +989,14 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-screen {
+  width: 100vw;
+}
+
+.z-10 {
+  z-index: 10;
 }
 
 .transform {
