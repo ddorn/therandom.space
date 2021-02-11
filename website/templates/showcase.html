@@ -50,11 +50,19 @@
         document.querySelectorAll('[data-tooltip]').forEach(elem => {
             make_tooltip(elem, translations[elem.getAttribute('data-tooltip')])
         })
+
+        const pauseBtn = document.getElementById('pause-btn');
+        pauseBtn.addEventListener('click', () => { windAnimation.isPaused() ? windAnimation.resume() : windAnimation.pause(); })
+        make_tooltip(pauseBtn, () => { return windAnimation.isPaused() ? 'Resume the animation' : 'Pause the animation'; })
     </script>
 
 {% endblock %}
 
 {% block background %}
-    <canvas id="bg-canvas" class="absolute w-screen h-screen overflow-hidden"></canvas>
+    <canvas id="bg-canvas" class="fixed w-screen h-screen overflow-hidden"></canvas>
+    <button id="pause-btn" class="fixed bottom-8 right-8 z-10 w-8 h-8
+        rounded-full focus:outline-none text-gray-300 hover:text-gray-50">
+        {{ icon('pause', 'h-10') }}
+    </button>
     <script src="{{ url_for('static', filename='wind.js') }}"></script>
 {% endblock %}

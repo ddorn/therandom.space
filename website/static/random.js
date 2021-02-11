@@ -71,11 +71,20 @@ function create_tip(elem, text) {
     // Positioning
     let elem_rect = elem.getBoundingClientRect();
     let tip_rect = tip.getBoundingClientRect();
-    console.log(tip_rect.height, elem_rect.top)
-    let top = elem_rect.top - tip_rect.height - 12 + 'px';
-    tip.style.left = elem_rect.left + elem_rect.width / 2 - tip_rect.width / 2 + 'px'
-    tip.style.top = top;
+    let elem_centerx = elem_rect.left + elem_rect.width / 2;
+    let top = elem_rect.top - tip_rect.height - 12;
+    let left = elem_centerx - tip_rect.width / 2;
 
+    if (left + tip_rect.width > window.innerWidth) {
+        left = window.innerWidth - tip_rect.width - 3;
+    } else if (left < 0) {
+        left = 3;
+    }
+    let prop = (elem_centerx - left) / tip_rect.width;
+    tip.style.setProperty('--tip-position', prop * 100 + '%')
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
     return tip;
 }
 
