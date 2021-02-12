@@ -1,5 +1,5 @@
 function windBackground() {
-    const VMAX = 2;
+    const VMAX = 1.5
     const NB_BUBBLES = 80;
     const SIZE_MAX = 10;
     const SIZE_MIN = 4;
@@ -9,7 +9,7 @@ function windBackground() {
     let canvas = document.getElementById('bg-canvas');
     ctx = canvas.getContext('2d');
 
-    let colors = [ '#ffa500', 'rebeccapurple', 'yellow', '#00a5ff'];
+    let colors = [ '#ffa500', '#663399', '#ffff00', '#00a5ff'];
     let bubbles = [];
     let running = true;
     let mouse = { x: 0, y: 0 }
@@ -19,6 +19,7 @@ function windBackground() {
     canvas.width = w;
     canvas.height = h;
 
+    function rand(mini, maxi) { return Math.random() * (maxi - mini) + mini}
     function dist(b1, b2) {
         // On a torus
         return Math.sqrt(Math.min(
@@ -35,25 +36,40 @@ function windBackground() {
 
     function randomBubble() {
         return {
-            x: Math.random() * w,
-            y: Math.random() * h,
-            vel: Math.random() * VMAX,
-            angle: Math.random() * PI / 3- PI / 6,
-            vangle: Math.random() * 0.01 - 0.005,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            radius: Math.random() * (SIZE_MAX - SIZE_MIN) + SIZE_MIN,
-            fill: Math.round(Math.random()),
-            offset: Math.random(),
+            x: rand(0, w),
+            y: rand(0, h),
+            vel: rand(0.3, VMAX),
+            angle: rand(-PI/3, PI/3),
+            vangle: rand(-0.005, 0.005),
+            color: colors[Math.floor(rand(0, colors.length))],
+            radius: rand(SIZE_MIN, SIZE_MAX),
+            fill: Math.round(rand(0, 1)),
+            offset: rand(0, 1),
+            shape: Math.floor(rand(0, 5)),
+            squareAngle: rand(0, PI),
+            squareAngleVel: rand(-0.03, 0.03),
         }
     }
 
     function draw() {
         ctx.clearRect(0, 0, w, h);
         bubbles.map(bubble => {
-            ctx.beginPath();
-            ctx.arc(bubble.x, bubble.y, scaledRadius(bubble), 0, Math.PI * 2);
+            let r = scaledRadius(bubble),
+                x = bubble.x,
+                y = bubble.y,
+                a = bubble.squareAngle;
             ctx.strokeStyle = bubble.color;
             ctx.fillStyle = bubble.color;
+            ctx.beginPath();
+            if (bubble.shape === 0) {
+                ctx.arc(bubble.x, bubble.y, r, 0, Math.PI * 2);
+            } else {
+                ctx.moveTo(x + r * Math.cos(a), y + r * Math.sin(a));
+                for (let i = 0; i < 2 + bubble.shape; i++) {
+                    a += 2 * PI / (2 + bubble.shape);
+                    ctx.lineTo(x + r * Math.cos(a), y + r * Math.sin(a))
+                }
+            }
             bubble.fill ? ctx.fill() : ctx.stroke()
         })
     }
@@ -61,14 +77,15 @@ function windBackground() {
     function update(t) {
         bubbles.forEach(bubble => {
             let angle = bubble.angle + Math.sin(t / 3000 + bubble.offset * PI * 2) * PI / 6
+            bubble.squareAngle += bubble.squareAngleVel;
 
             bubble.x += bubble.vel * Math.cos(angle);
             bubble.y += bubble.vel * Math.sin(angle);
             let r = scaledRadius(bubble)
-            if (bubble.x < -r) bubble.x = w + r;
-            if (bubble.x > w+r) bubble.x = -r;
-            if (bubble.y < -r) bubble.y = h + r;
-            if (bubble.y > h+r) bubble.y = -r;
+            if (bubble.x < -2*r) bubble.x = w + r;
+            if (bubble.x > w+2*r) bubble.x = -r;
+            if (bubble.y < -2*r) bubble.y = h + r;
+            if (bubble.y > h+2*r) bubble.y = -r;
 
         })
     }
@@ -95,7 +112,6 @@ function windBackground() {
     window.addEventListener('mousemove', (event) => {
         mouse.x = event.clientX;
         mouse.y = event.clientY;
-        console.log(mouse)
     });
 
     requestAnimationFrame(animationFrame)
