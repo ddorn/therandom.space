@@ -7,45 +7,71 @@
         {{ showcase_card("The Fractal Space",
                 "A random fractal generator. <br><br>Enter your name or anything, get a fractal !",
                 "thefractalspace.png",
-                "https://thefractal.space",
-                "python javascript flask") }}
+                "python javascript flask",
+                web="https://thefractal.space",
+                gitlab="https://gitlab.com/ddorn/thefractal.space"
+            ) }}
         {{ showcase_card("The Casta Way",
                 "A game about going up a golden road and... beer.<br><br>It was made in under 4 days with my little brother for Pyweek30",
                 "thecastaway.png",
-                "https://pyweek.org/e/the-casta-way/",
-                "python pygame jam") }}
+                "python pygame",
+                jam="https://pyweek.org/e/the-casta-way/",
+                gitlab="https://gitlab.com/ddorn/the-casta-way"
+            ) }}
         {{ showcase_card("The Random Space",
                 "A generator of random proverbs, movie titles or town names.",
                 "therandomspace.png",
-                "https://therandom.space",
-                "javascript python flask")  }}
+                "javascript python flask",
+                web="https://therandom.space",
+                gitlab="https://gitlab.com/ddorn/therandom.space"
+            )  }}
         {{ showcase_card("Chaos",
                 "A one-stick shooter made only with particles.<br><br>Made in one weekend in Rust for the 10th Alakajam.",
                 "chaos.png",
-                "https://alakajam.com/10th-alakajam/984/chaos/",
-                "rust jam")  }}
-        {{ showcase_card("48hours",
-                "A plateformer with a destructive llama.<br><br>My first full game, made with a friend in 48hours. Note: we suck at level design!",
-                "48hours.png",
-                "https://gitlab.com/lama-corp/48hours",
-                "python pygame") }}
+                "rust",
+                jam="https://alakajam.com/10th-alakajam/984/chaos/",
+                itch="https://the-ddorn.itch.io/chaos",
+                gitlab="https://gitlab.com/ddorn/alakajam-chaos"
+            )  }}
+        {{ showcase_card("Butterfly Destroyers",
+                "Fight the butterfly overpopulation by shooting them down!<br><br>A 2.5D shooter with a lot of polish. Team entry winner of PyWeek 29 !",
+                "butterflydestroyers.png",
+                "python pygame",
+                jam="https://pyweek.org/e/PythonixCoders/",
+                youtube="https://www.youtube.com/watch?v=AmFneqdItbg",
+                github="https://github.com/PythonixCoders/PyWeek29/"
+            ) }}
         {{ showcase_card("Shadows",
                 "A pygame experiment with lightning and shadows.",
                 "shadows.png",
-                "https://gitlab.com/ddorn/shadow",
-                'python pygame experiment') }}
+                'python pygame experiment',
+                youtube="https://www.youtube.com/watch?v=961uJkNYThI",
+                gitlab="https://gitlab.com/ddorn/shadow"
+            ) }}
+        {{ showcase_card("48hours",
+                "A plateformer with a destructive llama.<br><br>My first full game, made with a friend in 48hours. Note: we suck at level design!",
+                "48hours.png",
+                "python pygame",
+                gitlab="https://gitlab.com/lama-corp/48hours"
+            ) }}
     </div>
 
     <script src="{{ url_for('static', filename='random.js') }}"></script>
     <script>
         const translations = {
+            // On icons
             python: 'Language: Python',
             rust: 'Language: Rust',
             javascript: 'Language: Javascript',
             flask: 'Web framework: Flask',
             pygame: 'Graphics with Pygame',
-            jam: 'Made during a game jam',
             experiment: 'This is an experiment',
+            // On links
+            jam: 'Game jam page',
+            gitlab: 'See the source code',
+            github: 'See the source code',
+            web: 'Go to the website',
+            youtube: 'Watch demo',
         };
         document.querySelectorAll('[data-tooltip]').forEach(elem => {
             make_tooltip(elem, translations[elem.getAttribute('data-tooltip')])
