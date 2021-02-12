@@ -31,6 +31,10 @@ function windBackground() {
     }
     function ease(x) { return 1 - 3*x**2 + 2*x**3; }
     function scaledRadius(bubble) { return bubble.radius * (1 + MAX_SCALE*ease(Math.min(1, dist(bubble, mouse) / influence))); }
+    function adjust(color, amount) {
+        // From https://stackoverflow.com/a/57401891
+        return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+}
     function pause() { running = false; }
     function resume() { if (running === false) requestAnimationFrame(animationFrame); running = true; }
 
@@ -51,26 +55,40 @@ function windBackground() {
         }
     }
 
+    function drawShape(x, y, r, angle, color, shape, fill) {
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        if (shape === 0) {
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+        } else {
+            ctx.moveTo(x + r * Math.cos(angle), y + r * Math.sin(angle));
+            for (let i = 0; i < 2 + shape; i++) {
+                angle += 2 * PI / (2 + shape);
+                ctx.lineTo(x + r * Math.cos(angle), y + r * Math.sin(angle))
+            }
+        }
+        fill ? ctx.fill() : ctx.stroke()
+
+    }
+
     function draw() {
         ctx.clearRect(0, 0, w, h);
         bubbles.map(bubble => {
-            let r = scaledRadius(bubble),
-                x = bubble.x,
-                y = bubble.y,
-                a = bubble.squareAngle;
-            ctx.strokeStyle = bubble.color;
-            ctx.fillStyle = bubble.color;
-            ctx.beginPath();
-            if (bubble.shape === 0) {
-                ctx.arc(bubble.x, bubble.y, r, 0, Math.PI * 2);
-            } else {
-                ctx.moveTo(x + r * Math.cos(a), y + r * Math.sin(a));
-                for (let i = 0; i < 2 + bubble.shape; i++) {
-                    a += 2 * PI / (2 + bubble.shape);
-                    ctx.lineTo(x + r * Math.cos(a), y + r * Math.sin(a))
-                }
-            }
-            bubble.fill ? ctx.fill() : ctx.stroke()
+            let r = scaledRadius(bubble);
+            drawShape(
+                bubble.x - r/2,
+                bubble.y + r/2,
+                r,
+                bubble.squareAngle, bubble.color + '50', bubble.shape, bubble.fill)
+        })
+        bubbles.map(bubble => {
+            let r = scaledRadius(bubble);
+            drawShape(
+                bubble.x,
+                bubble.y,
+                r,
+                bubble.squareAngle, bubble.color, bubble.shape, bubble.fill)
         })
     }
 
@@ -113,6 +131,11 @@ function windBackground() {
         mouse.x = event.clientX;
         mouse.y = event.clientY;
     });
+    let lastScroll = window.scrollY;
+    document.addEventListener('scroll', ev => {
+        bubbles.forEach(bubble => bubble.y -= window.scrollY - lastScroll)
+        lastScroll = window.scrollY;
+    })
 
     requestAnimationFrame(animationFrame)
 
