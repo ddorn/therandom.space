@@ -1,6 +1,6 @@
 function windBackground() {
     const VMAX = 1.5
-    const NB_BUBBLES = 80;
+    const NB_BUBBLES = window.innerWidth * window.innerHeight / 20_000;  // proportional to about 80 for a 1920×1080 screen
     const SIZE_MAX = 10;
     const SIZE_MIN = 4;
     const MAX_SCALE = 6;
