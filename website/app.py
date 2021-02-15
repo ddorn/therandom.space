@@ -92,6 +92,10 @@ def showcase():
     return render_template('showcase.html', title="Showcase")
 
 
+@app.route("/anim")
+def anim():
+    return render_template('animation.html', title="Animation")
+
 # ####################### API ####################### #
 
 class Generate(Resource):
