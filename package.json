@@ -5,5 +5,10 @@
   "devDependencies": {
     "autoprefixer": "10.2.4",
     "tailwindcss": "^2.0.0"
+  },
+  "scripts": {
+    "tw": "tailwind build static/source.css -o static/style.css -c tailwind.config.js --no-autoprefixer",
+    "tw-prod": "NODE_ENV=production npm run tw",
+    "start": "FLASK_ENV=development python -m flask run"
   }
 }
