@@ -7,6 +7,7 @@ from lampadophore import NGram
 
 DATA = Path(__file__).parent / "data"
 LIKE_FILE = DATA / "like_file"
+CONFIG_FILE = DATA / 'config.json'
 
 PROVERB = "proverb"
 ALSACE = "alsace"
@@ -22,8 +23,6 @@ KIND_LEN_BOUNDS = {
     ALSACE: (5, 9999),
     FILM: (3, 9999)
 }
-
-CONFIG_FILE = Path(__file__).parent / 'config.json'
 
 
 def get_config(key):
