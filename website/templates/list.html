@@ -1,0 +1,115 @@
+{% extends "layouts/base.html" %}
+{% from "macros/macros.html" import icon %}
+
+{% block body %}
+<script src="https://unpkg.com/vue@3.0.5"></script>
+<div id="app" class="min-h-screen min-w-screen bg-gray-50 text-black">
+    <h1 class="p-4 text-2xl bg-orange-500 shadow-lg mb-6">Liste de courses</h1>
+
+
+    <div v-for="(group, name) in shopByCateg" class="pb-4">
+        <h2 class="text-xl px-4">[[ name ]]</h2>
+        <ul class="list-disc list-inside">
+            <shop-item v-for="item in group" :item="item" :key="item.name"></shop-item>
+        </ul>
+    </div>
+
+    [[ shop ]]
+    <br>
+    <br>
+    [[ shopByCateg ]]
+    
+
+    <div class="p-4 w-96 flex flex-col items-center">
+        <h2 class="text-xl p-4">Ajouter un objet</h2>
+        <div class="flex pb-2 w-full">
+            Nom: <input type="text" class="ml-2 flex-grow border" v-model="addName">
+        </div>
+        <div class="flex pb-2 w-full">
+            Catégorie: <input type="text" class="ml-2 flex-grow border" v-model="addCateg">
+        </div>
+        <button class="rounded-full bg-gray-300 px-4 py-2"
+            v-on:click="addItem">Ajouter</button>
+    </div>
+</div>
+
+<script>
+    'use strict';
+
+    function newItem(name, categ) {
+        return {
+            name, categ,
+            done: false,
+        }
+    }
+
+    const Counter = {
+        data() {
+            return {
+                shop: [
+                    newItem("Porte-manteau", 'Meubles'),
+                    newItem("Sardines", 'Miam'),
+                    newItem("Planche à découper", 'Ustensiles'),
+                    newItem("Fouet simple", 'Ustensiles'),
+                    newItem("Passoire", 'Ustensiles'),
+                ],
+                addCateg: '',
+                addName: '',
+            }
+        },
+        computed: {
+            shopByCateg() {
+                let groups = {};
+                this.shop.forEach(item => {
+                    if (item.categ in groups) {
+                        groups[item.categ].push(item);
+                    } else {
+                        groups[item.categ] = [item];
+                    }
+                });
+                for (const group in groups) {
+                    console.log(group)
+                    groups[group].sort((a, b) => {
+                        let ddone = a.done - b.done;
+                        return ddone != 0 ? ddone : a.name > b.name ? 1 : -1; 
+                    })
+                }
+                return groups;
+            }
+        },
+        methods: {
+            addItem() {
+                this.shop.push(newItem(this.addName, this.addCateg));
+                this.addName = '';
+                this.addCateg = '';
+            },
+        },
+        delimiters: ['[[', ']]'],
+    }
+
+    const vm = Vue.createApp(Counter);
+    vm.component('shop-item', {
+        props: ['item'],
+        data() { return {
+
+        }},
+        methods: {
+            toggleDone() {
+                this.item.done = !this.item.done;
+            }
+        },
+        template: `
+        <li class="py-1 px-3 flex justify-between items-center bg-white shadow m-2 rounded-lg" :class="{'text-gray-500 line-through': item.done}">
+            <button @click="toggleDone" class="rounded border-2 border-orange-200 w-6 h-6 mr-4" :class="{'text-gray-300': !item.done}">
+                {{ icon('check', "h-6 pb-1") }}
+            </button>
+            <span class="justify-self-start flex-grow">[[ item.name ]]</span>
+            <span>[[ item.categ ]]</span>
+        </li>
+        `,
+        delimiters: ['[[', ']]'],
+    })
+
+    vm.mount('#app')
+</script>
+{% endblock %}
