@@ -1,0 +1,150 @@
+/* Gilroy Medium */
+@font-face {
+    font-family: "Gilroy";
+    src: url("/static/fonts/gilroy/Gilroy-Medium.eot");
+    src: local("Gilroy Medium"), local("Gilroy-Medium"), url("/static/fonts/gilroy/Gilroy-Medium.eot?#iefix") format("embedded-opentype"), url("/static/fonts/gilroy/Gilroy-Medium.woff2") format("woff2"), url("/static/fonts/gilroy/Gilroy-Medium.woff") format("woff"), url("/static/fonts/gilroy/Gilroy-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+/* END Gilroy Medium */
+
+
+/* Gilroy Bold */
+@font-face {
+    font-family: "Gilroy";
+        src: url("/static/fonts/gilroy/Gilroy-Bold.eot");
+        src: local("Gilroy Bold"), local("Gilroy-Bold"), url("/static/fonts/gilroy/Gilroy-Bold.eot?#iefix") format("embedded-opentype"), url("/static/fonts/gilroy/Gilroy-Bold.woff2") format("woff2"), url("/static/fonts/gilroy/Gilroy-Bold.woff") format("woff"), url("/static/fonts/gilroy/Gilroy-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Gilroy FAT*/
+@font-face {
+    font-family: "Gilroy";
+    src: url("/static/fonts/gilroy/Gilroy-Black.eot");
+    src: local("Gilroy Black"), local("Gilroy-Black"), url("/static/fonts/gilroy/Gilroy-Black.eot?#iefix") format("embedded-opentype"), url("/static/fonts/gilroy/Gilroy-Black.woff2") format("woff2"), url("/static/fonts/gilroy/Gilroy-Black.woff") format("woff"), url("/static/fonts/gilroy/Gilroy-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+
+/* END Gilroy Bold *
+
+/*LA CEST A MOI*/
+@tailwind base;
+@tailwind utilities;
+/* Ici pour ajouter des classes */
+@tailwind components;
+
+@layer components {
+    .p-about {
+        @apply mt-4 md:w-1/2 text-justify leading-5
+    }
+    .btn-gray {
+        @apply px-6 py-2 max-h-16 w-min bg-elevation-4 border border-elevation-6 hover:bg-elevation-8 rounded-full focus:outline-none
+    }
+}
+
+
+:root {
+    --blue-900: #f7fafc;
+    --blue-800: #e2f2f7;
+    --blue-700: #e2e8f0;
+    --blue-500: #a0aec0;
+    --blue-400: #7488a5;
+    --blue-300: #516482;
+    --blue-200: #354157;
+    --blue-100: #1a202c;
+    --orange: #ffa500;
+}
+
+a {
+    text-decoration: none;
+    color: var(--orange);
+}
+
+.tooltip {
+    --tip-position: 50%;
+    position: fixed;
+    background: rebeccapurple;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    animation: fadein 0.3s ease-in-out;
+}
+.tooltip:after {
+    --meh: 10px;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rebeccapurple;
+    position: absolute;
+    left: calc(var(--tip-position) - 10px);
+    bottom: -7px;
+    animation: fadein 0.3s ease-in-out;
+}
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.section__title--about {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    font-weight: bold;
+}
+
+.text-huge {
+    font-size: 10rem;
+}
+
+/* My rainbow animation */
+.swag {
+    position: relative;
+    border-radius: 9999px;
+}
+.swag-hover:hover {
+    position: relative;
+    border-radius: 0.75rem;
+}
+.swag:before, .swag:after {
+    border-radius: 9999px;
+}
+.swag-hover:hover:after, .swag-hover:hover:before  {
+    border-radius: 0.75rem;
+}
+.swag:before, .swag:after, .swag-hover:hover:after, .swag-hover:hover:before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: -2px;
+    background: linear-gradient(45deg,
+        #ffa500,
+        #ff0000, #ffa500, #a5ff00, #00ffa5,
+        #00ffff, #a500ff,
+        #ff00a5, #ff0000,
+        #ffa500, #a5ff00
+    );
+    background-size: 500% 500%;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    z-index: -1;
+    animation: animate 30s linear infinite;
+}
+.swag:after, .swag-hover:hover:after {
+    filter: blur(10px);
+}
+@keyframes animate {
+    0%, 100% {
+        background-position: top left;
+    }
+    25% {
+        background-position: top right;
+    }
+    50% {
+        background-position: bottom right;
+    }
+    75% {
+        background-position: bottom left;
+    }
+}

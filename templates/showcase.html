@@ -1,0 +1,94 @@
+{% extends "layouts/regular.html" %}
+{% from "macros/macros.html" import icon, showcase_card %}
+
+{% block content %}
+    <h1 class="text-4xl md:text-8xl text-center pt-4 pb-12 z-10">Projects</h1>
+    <div class="mx-auto md:max-w-screen-xl text-center ">
+        {{ showcase_card("The Fractal Space",
+                "A random fractal generator. <br><br>Enter your name or anything, get a fractal !",
+                "thefractalspace.png",
+                "python javascript flask",
+                web="https://thefractal.space",
+                gitlab="https://gitlab.com/ddorn/thefractal.space"
+            ) }}
+        {{ showcase_card("The Casta Way",
+                "A game about going up a golden road and... beer.<br><br>It was made in under 4 days with my little brother for Pyweek30",
+                "thecastaway.png",
+                "python pygame",
+                jam="https://pyweek.org/e/the-casta-way/",
+                gitlab="https://gitlab.com/ddorn/the-casta-way"
+            ) }}
+        {{ showcase_card("The Random Space",
+                "A generator of random proverbs, movie titles or town names.",
+                "therandomspace.png",
+                "javascript python flask",
+                web="https://therandom.space",
+                gitlab="https://gitlab.com/ddorn/therandom.space"
+            )  }}
+        {{ showcase_card("Chaos",
+                "A one-stick shooter made only with particles.<br><br>Made in one weekend in Rust for the 10th Alakajam.",
+                "chaos.png",
+                "rust",
+                jam="https://alakajam.com/10th-alakajam/984/chaos/",
+                itch="https://the-ddorn.itch.io/chaos",
+                gitlab="https://gitlab.com/ddorn/alakajam-chaos"
+            )  }}
+        {{ showcase_card("Butterfly Destroyers",
+                "Fight the butterfly overpopulation by shooting them down!<br><br>A 2.5D shooter with a lot of polish. Team entry winner of PyWeek 29 !",
+                "butterflydestroyers.png",
+                "python pygame",
+                jam="https://pyweek.org/e/PythonixCoders/",
+                youtube="https://www.youtube.com/watch?v=AmFneqdItbg",
+                github="https://github.com/PythonixCoders/PyWeek29/"
+            ) }}
+        {{ showcase_card("Shadows",
+                "A pygame experiment with lightning and shadows.",
+                "shadows.png",
+                'python pygame experiment',
+                youtube="https://www.youtube.com/watch?v=961uJkNYThI",
+                gitlab="https://gitlab.com/ddorn/shadow"
+            ) }}
+        {{ showcase_card("48hours",
+                "A plateformer with a destructive llama.<br><br>My first full game, made with a friend in 48 hours. Note: we suck at level design!",
+                "48hours.png",
+                "python pygame",
+                gitlab="https://gitlab.com/lama-corp/48hours"
+            ) }}
+    </div>
+
+    <script src="{{ url_for('static', filename='random.js') }}"></script>
+    <script>
+        const translations = {
+            // On icons
+            python: 'Language: Python',
+            rust: 'Language: Rust',
+            javascript: 'Language: Javascript',
+            flask: 'Web framework: Flask',
+            pygame: 'Graphics with Pygame',
+            experiment: 'This is an experiment',
+            // On links
+            jam: 'Game jam page',
+            gitlab: 'See the source code',
+            github: 'See the source code',
+            web: 'Go to the website',
+            youtube: 'Watch demo',
+        };
+        document.querySelectorAll('[data-tooltip]').forEach(elem => {
+            make_tooltip(elem, translations[elem.getAttribute('data-tooltip')])
+        })
+
+        const pauseBtn = document.getElementById('pause-btn');
+        pauseBtn.addEventListener('click', () => { windAnimation.isPaused() ? windAnimation.resume() : windAnimation.pause(); })
+        make_tooltip(pauseBtn, () => { return windAnimation.isPaused() ? 'Resume the animation' : 'Pause the animation'; })
+    </script>
+
+{% endblock %}
+
+{% block background %}
+    <canvas id="bg-canvas" class="fixed w-screen h-screen overflow-hidden"></canvas>
+    <button id="pause-btn" class="fixed bottom-8 right-8 z-10 w-8 h-8
+        rounded-full focus:outline-none text-gray-300 hover:text-gray-50">
+        {{ icon('pause', 'h-10') }}
+    </button>
+    <script src="{{ url_for('static', filename='wind.js') }}"></script>
+{% endblock %}

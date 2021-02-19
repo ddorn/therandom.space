@@ -1,0 +1,58 @@
+{% extends "layouts/regular.html" %}
+{% from "macros/macros.html" import icon, like_btn %}
+
+{% block content %}
+    <div class="flex flex-col justify-between items-center justify-center h-full p-4 lg:p-0">
+        <div></div>
+        <h1 id="quote" class="text-3xl md:text-6xl font-bold text-center break-word md:leading-snug select-all">{{ bled }}</h1>
+        <div class="text-4xl flex justify-center space-x-4">
+            <button id="reload-btn" class="btn-gray">
+                {{ icon("reload", "h-9 pb-1") }}
+            </button>
+            {{ like_btn(likes, id='like-btn') }}
+            <button id="clip-btn" class="btn-gray">
+                {{ icon("clipboard", "h-9 pb-1") }}
+            </button>
+        </div>
+    </div>
+    <script src="{{ url_for("static", filename="random.js") }}"></script>
+    <script>
+        const like_button = document.getElementById('like-btn');
+        const quote_elem = document.getElementById("quote")
+        const reload_button = document.getElementById("reload-btn")
+        const clip_button = document.getElementById("clip-btn")
+
+        make_like_button(like_button, quote_elem, '{{ title.lower() }}');
+        make_tooltip(like_button, function () {
+            if (isLiked(quote_elem.innerText)) {
+                return 'Remove your vote';
+            } else {
+                return 'Vote for the best of';
+            }
+        })
+
+        reload_button.addEventListener('click',  _ => {
+            fetch('{{ url_for("generate", kind=title.lower()) }}')
+                .then(response => response.json()
+                    .then(data => {
+                        quote_elem.innerText = data.quote;
+                        like_button.children[0].innerText = data.likes;
+                        if (isLiked(data.quote)) {
+                            like_button.style.color = "#ffa500";
+                        } else {
+                            like_button.style.color = "white";
+                        }
+                    })
+                );
+        })
+        let kind = '{{ title.lower() }}'
+        make_tooltip(reload_button, `New ${kind === 'alsace' ? 'town name' : kind}`)
+
+        make_tooltip(clip_button, 'Copy to clipboard');
+        clip_button.addEventListener('click', _ => {
+            let tip = create_tip(clip_button, 'Copied !')
+            setTimeout(() => tip.remove(), 1000)
+            copy(quote_elem.innerText);
+        })
+    </script>
+{% endblock %}
