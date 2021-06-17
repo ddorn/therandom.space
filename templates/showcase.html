@@ -4,6 +4,15 @@
 {% block content %}
     <h1 class="text-4xl md:text-8xl text-center pt-4 pb-12 z-10">Projects</h1>
     <div class="mx-auto md:max-w-screen-xl text-center ">
+        {{ showcase_card("Flyre",
+                "A pixelart shmup with a skilltree.<br><br>Winner of the Pygame Community Easter Jam, that lasted a week.",
+                "flyre.png",
+                "python pygame",
+                youtube="https://www.youtube.com/watch?v=_AwWQzmCyjg",
+                gitlab="https://gitlab.com/ddorn/flyre",
+                itch="https://cozyfractal.itch.io/flyre",
+                jam="https://itch.io/jam/pygame-community-easter-jam"
+            ) }}
         {{ showcase_card("The Fractal Space",
                 "A random fractal generator. <br><br>Enter your name or anything, get a fractal !",
                 "thefractalspace.png",
@@ -30,7 +39,7 @@
                 "chaos.png",
                 "rust",
                 jam="https://alakajam.com/10th-alakajam/984/chaos/",
-                itch="https://the-ddorn.itch.io/chaos",
+                itch="https://cozyfractal.itch.io/chaos",
                 gitlab="https://gitlab.com/ddorn/alakajam-chaos"
             )  }}
         {{ showcase_card("Butterfly Destroyers",
@@ -72,6 +81,7 @@
             github: 'See the source code',
             web: 'Go to the website',
             youtube: 'Watch demo',
+            itch: 'Get it on itch!',
         };
         document.querySelectorAll('[data-tooltip]').forEach(elem => {
             make_tooltip(elem, translations[elem.getAttribute('data-tooltip')])

@@ -96,10 +96,6 @@ def showcase():
 def anim():
     return render_template('animation.html', title="Animation")
 
-@app.route("/list")
-def listpage():
-    return render_template('list.html', title="Liste de course")
-
 # ####################### API ####################### #
 
 class Generate(Resource):
