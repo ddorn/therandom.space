@@ -2,9 +2,66 @@
 {% from "macros/macros.html" import icon, showcase_card %}
 
 {% block content %}
-    <h1 class="text-4xl md:text-8xl text-center pt-4 pb-12 z-10">Projects</h1>
+    <h1 class="text-6xl md:text-8xl text-center pt-4 pb-12 z-10">Projects</h1>
+    <div class="text-white lg:max-w-screen-lg max-w-max my-4 rounded-xl bg-gray-900 bg-opacity-80
+                border-orange-500 border-2 shadow-2xl shadow
+                md:flex justify-between mx-auto p-6 space-x-6
+                ">
+        <div class="md:min-w-max text-center flex flex-col items-center h-full ">
+                <h2 class="text-xl text-gray-400">Latest creation</h2>
+                <div class="text-4xl font-bold swag-text my-2">Flyre</div>
+                <div class="w-4/5 mb-4">
+                    A pixel-art shoot-em-up with a skill tree.
+                </div>
+                <div class="flex justify-center space-x-3 mb-6">
+                    {% for name in "python pygame".split() %}
+                        <img src="{{ url_for('static', filename='imgs/' + name + '.png') }}" alt="{{ name }} logo"
+                             class="h-6" data-tooltip="{{ name }}">
+                    {% endfor %}
+                </div>
+                <div class="space-y-2">
+                {% for icon_name, url, text in (
+                        ("itch", "https://cozyfractal.itch.io/flyre", "Download on itch.io"),
+                        ("gitlab", "https://gitlab.com/ddorn/flyre", "Check the source code"),
+                        ("jam", "https://itch.io/jam/pygame-community-easter-jam", "Winner of a one week game jam"),
+                    ) %}
+                    <a href="{{ url }}" class="block w-full p-3
+                        text-left text-white
+                        bg-gray-800 rounded
+                        transform transition hover:translate-x-2
+                        hover:bg-gray-700
+                    ">
+                        <img src="{{ url_for('static', filename='imgs/' + icon_name + '.png') }}" alt="{{ name }} logo"
+                             class="h-6 inline pr-2 transform transition hover:scale-110"> <!-- data-tooltip="{{ icon_name }}"> -->
+                        {{ text }}
+                    </a>
+                {% endfor %}
+                </div>
+        </div>
+        <div class="hidden md:block w-full h-96 relative">
+            <iframe class="absolute top-0 left-0 w-full h-full"
+                    width="560" height="315"
+                    src="https://www.youtube-nocookie.com/embed/_AwWQzmCyjg?controls=0&rel=0"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+    <!-- I don't like it much, having twice the code for the video... but I don't know how to handle mobiles better. -->
+    <div class="md:hidden w-full h-64 xs:h-96 relative">
+        <iframe class="absolute top-0 w-screen h-full"
+                style="left:50%; transform: translate(-50%, 0);"
+                width="560" height="315"
+                src="https://www.youtube-nocookie.com/embed/_AwWQzmCyjg?controls=0&rel=0"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+    </div>
+
+    <div class="mb-16"></div>
+
     <div class="mx-auto md:max-w-screen-xl text-center ">
-        {{ showcase_card("Flyre",
+        <!-- {{ showcase_card("Flyre",
                 "A pixelart shmup with a skilltree.<br><br>Winner of the Pygame Community Easter Jam, that lasted a week.",
                 "flyre.png",
                 "python pygame",
@@ -12,7 +69,7 @@
                 gitlab="https://gitlab.com/ddorn/flyre",
                 itch="https://cozyfractal.itch.io/flyre",
                 jam="https://itch.io/jam/pygame-community-easter-jam"
-            ) }}
+            ) }} -->
         {{ showcase_card("The Fractal Space",
                 "A random fractal generator. <br><br>Enter your name or anything, get a fractal !",
                 "thefractalspace.png",
