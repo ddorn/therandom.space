@@ -1,16 +1,25 @@
 from flask import Flask, Response, abort, jsonify, make_response, redirect, render_template, request, url_for
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from helper import (
     ALSACE, FILM, KINDS, LIKE_FILE, MAX_LIKED_QUOTES, MAX_QUOTE_LENGTH, PROVERB, Likes, gen_clean, generable, ngram,
 )
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)  # TLS ends at fly's proxy
 app.json.sort_keys = False  # Keep the best of ranked
 app.json.ensure_ascii = False
 likes = Likes(LIKE_FILE)
 
 for _kind in KINDS:
     ngram(_kind)
+
+
+@app.before_request
+def redirect_www():
+    if request.host.startswith("www."):
+        url = request.url.replace("://www.", "://", 1)
+        return redirect(url, code=308)  # Permanent, and keeps the method
 
 
 def wants_raw() -> bool:
