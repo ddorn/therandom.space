@@ -1,0 +1,28 @@
+app = "therandom-space"
+primary_region = "cdg"
+kill_signal = "SIGTERM"
+
+[env]
+  LIKES_FILE = "/data/like_file"
+
+[mounts]
+  source = "likes"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "60s"
+    method = "GET"
+    path = "/about"
+    timeout = "5s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

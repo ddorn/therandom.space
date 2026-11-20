@@ -1,0 +1,13 @@
+*
+!pyproject.toml
+!uv.lock
+!.python-version
+!app.py
+!helper.py
+!lampadophore.py
+!gunicorn.conf.py
+!static
+!templates
+!data/citations.proc2
+!data/alsa.proc3
+!data/films.proc5

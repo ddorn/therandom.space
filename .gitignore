@@ -1,6 +1,5 @@
 __pycache__/
-log
+.venv/
 node_modules
 package-lock.json
 data
-static/google*
