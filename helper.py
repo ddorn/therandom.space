@@ -26,6 +26,10 @@ KIND_LEN_BOUNDS = {
     ALSACE: (5, 9999),
     FILM: (3, 9999),
 }
+# Long town names are the funniest: keep a generated name with probability
+# proportional to length**k, which reshapes the distribution towards longer names.
+KIND_LENGTH_WEIGHT = {ALSACE: 2}
+LENGTH_WEIGHT_REFERENCE = 40  # Names at least this long are always kept
 
 # One generation in SERVE_BESTOF_ONE_IN is replaced by a liked quote of the same kind.
 SERVE_BESTOF_ONE_IN = 16
@@ -132,7 +136,8 @@ def gen_clean(kind: str, likes: Likes) -> str:
             return best
 
     occ = ngram(kind)
+    k = KIND_LENGTH_WEIGHT.get(kind, 0)
     while True:
         w = occ.gen()
-        if in_bounds(w, kind):
+        if in_bounds(w, kind) and random.random() < (length(w, kind) / LENGTH_WEIGHT_REFERENCE) ** k:
             return w
