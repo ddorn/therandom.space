@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import re
 import threading
 from functools import cache
 from operator import itemgetter
@@ -129,6 +130,22 @@ def generable(quote: str, kind: str) -> bool:
     return True
 
 
+TOWN_SMALL_WORDS = {"le", "la", "les", "lès", "sur", "près", "au", "aux", "du", "de", "en", "sous"}
+
+
+def town_case(name: str) -> str:
+    """Capitalize like real town names: Chavannes-sur-l'Étang, Aspach-le-Bas, La Petite-Pierre."""
+    def part_case(part: str, first: bool) -> str:
+        if not first and part in TOWN_SMALL_WORDS:
+            return part
+        if part.startswith("l'"):
+            return "l'" + part[2:3].upper() + part[3:]
+        return part[:1].upper() + part[1:]
+
+    parts = re.split(r"([- ])", name)
+    return "".join(part if part in "- " else part_case(part, i == 0) for i, part in enumerate(parts))
+
+
 def gen_clean(kind: str, likes: Likes) -> str:
     if random.randrange(SERVE_BESTOF_ONE_IN) == 0:
         best = likes.random_quote(kind)
@@ -140,4 +157,4 @@ def gen_clean(kind: str, likes: Likes) -> str:
     while True:
         w = occ.gen()
         if in_bounds(w, kind) and random.random() < (length(w, kind) / LENGTH_WEIGHT_REFERENCE) ** k:
-            return w
+            return town_case(w) if kind == ALSACE else w
