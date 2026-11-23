@@ -1,7 +1,7 @@
 # A named stage rather than COPY --from=<image>, so that Dependabot updates it.
 FROM ghcr.io/astral-sh/uv:0.13 AS uv
 
-FROM python:3.14-slim
+FROM python:3.15-slim
 
 COPY --from=uv /uv /bin/uv
 
